@@ -1,0 +1,2461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BIMTEQ Argus - Quote Intelligence Platform</title>
+  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg-primary:#0a0f1a;
+      --bg-secondary:#111827;
+      --bg-card:#1a2234;
+      --bg-elevated:#232d42;
+      --bg-hover:#2a3550;
+      --border:#2d3a52;
+      --border-light:#3a4866;
+      --text-primary:#f1f5f9;
+      --text-secondary:#94a3b8;
+      --text-muted:#64748b;
+      --accent-blue:#3b82f6;
+      --accent-cyan:#06b6d4;
+      --accent-green:#10b981;
+      --accent-yellow:#f59e0b;
+      --accent-red:#ef4444;
+      --gradient-blue:linear-gradient(135deg,#3b82f6 0%,#06b6d4 100%);
+      --gradient-green:linear-gradient(135deg,#10b981 0%,#34d399 100%);
+      --shadow-sm:0 2px 4px rgba(0,0,0,0.3);
+      --shadow-md:0 4px 12px rgba(0,0,0,0.4);
+      --shadow-lg:0 25px 50px -12px rgba(0,0,0,0.5);
+      --shadow-xl:0 30px 60px rgba(0,0,0,0.6);
+    }
+    
+    *{box-sizing:border-box;margin:0;padding:0}
+    
+    body{
+      font-family:'DM Sans',-apple-system,sans-serif;
+      background:var(--bg-primary);
+      color:var(--text-primary);
+      min-height:100vh;
+    }
+    
+    .text-sm{font-size:13px}
+    .text-xs{font-size:11px}
+    .text-muted{color:var(--text-muted)}
+    .text-secondary{color:var(--text-secondary)}
+    .font-semibold{font-weight:600}
+    .font-bold{font-weight:700}
+    .flex{display:flex}
+    .items-center{align-items:center}
+    .justify-between{justify-content:space-between}
+    .gap-2{gap:8px}
+    .gap-3{gap:12px}
+    .gap-4{gap:16px}
+    .mb-2{margin-bottom:8px}
+    .mb-3{margin-bottom:12px}
+    .mb-4{margin-bottom:16px}
+    .mt-2{margin-top:8px}
+    .mt-4{margin-top:16px}
+    .mt-6{margin-top:24px}
+    .w-full{width:100%}
+    
+    .login-container{
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:linear-gradient(135deg,#0a0f1a 0%,#1a1f35 100%);
+      position:relative;
+      overflow:hidden;
+    }
+    
+    .login-container::before{
+      content:'';
+      position:absolute;
+      width:600px;
+      height:600px;
+      background:radial-gradient(circle,rgba(59,130,246,0.15) 0%,transparent 70%);
+      top:-200px;
+      right:-200px;
+    }
+    
+    .login-card{
+      background:var(--bg-card);
+      border:1px solid var(--border);
+      border-radius:24px;
+      padding:48px;
+      width:100%;
+      max-width:420px;
+      position:relative;
+      z-index:1;
+      box-shadow:var(--shadow-lg);
+    }
+    
+    .login-logo-container{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      margin-bottom:20px;
+    }
+    
+    .login-logo-img{
+      width:128px;
+      height:128px;
+      margin-bottom:2px;
+    }
+    
+    .login-brand{
+      font-size:28px;
+      font-weight:700;
+      text-align:center;
+      margin-bottom:4px;
+      letter-spacing:-0.5px;
+    }
+    
+    .login-brand-primary{
+      background:var(--gradient-blue);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+    
+    .login-brand-secondary{
+      color:var(--text-primary);
+      margin-left:6px;
+    }
+    
+    .login-subtitle{
+      text-align:center;
+      color:var(--text-secondary);
+      font-size:14px;
+      font-weight:500;
+      margin-bottom:40px;
+    }
+    
+    .form-group{margin-bottom:20px}
+    
+    .form-label{
+      display:block;
+      font-size:13px;
+      font-weight:500;
+      color:var(--text-secondary);
+      margin-bottom:8px;
+    }
+    
+    .form-input, .form-select{
+      width:100%;
+      padding:14px 16px;
+      background:var(--bg-secondary);
+      border:1px solid var(--border);
+      border-radius:10px;
+      color:var(--text-primary);
+      font-family:inherit;
+      font-size:15px;
+      transition:all 0.2s;
+    }
+    
+    .form-input:focus, .form-select:focus{
+      outline:none;
+      border-color:var(--accent-blue);
+      box-shadow:0 0 0 3px rgba(59,130,246,0.15);
+    }
+    
+    .search-bar{
+      position:relative;
+      margin-bottom:20px;
+      max-width:400px;
+    }
+    
+    .search-input{
+      width:100%;
+      padding:10px 14px 10px 40px;
+      background:var(--bg-card);
+      border:2px solid var(--border);
+      border-radius:10px;
+      color:var(--text-primary);
+      font-family:inherit;
+      font-size:14px;
+      transition:all 0.2s;
+    }
+    
+    .search-input:focus{
+      outline:none;
+      border-color:var(--accent-blue);
+      box-shadow:0 0 0 3px rgba(59,130,246,0.15);
+    }
+    
+    .search-icon{
+      position:absolute;
+      left:14px;
+      top:50%;
+      transform:translateY(-50%);
+      font-size:16px;
+      color:var(--text-muted);
+    }
+    
+    .login-btn{
+      width:100%;
+      padding:14px;
+      background:var(--gradient-blue);
+      border:none;
+      border-radius:10px;
+      color:white;
+      font-family:inherit;
+      font-size:15px;
+      font-weight:600;
+      cursor:pointer;
+      transition:all 0.2s;
+      margin-top:8px;
+    }
+    
+    .login-btn:hover{
+      transform:translateY(-1px);
+      box-shadow:0 8px 20px rgba(59,130,246,0.4);
+    }
+    
+    .app-container{display:flex;min-height:100vh}
+    
+    .sidebar{
+      width:280px;
+      background:var(--bg-secondary);
+      border-right:1px solid var(--border);
+      display:flex;
+      flex-direction:column;
+      position:fixed;
+      top:0;
+      left:0;
+      bottom:0;
+      z-index:100;
+    }
+    
+    .sidebar-header{
+      padding:20px;
+      border-bottom:1px solid var(--border);
+    }
+    
+    .sidebar-logo-container{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:12px;
+      margin-bottom:4px;
+    }
+    
+    .sidebar-logo-img{
+      width:150px;
+      height:120px;
+    }
+    
+    .sidebar-brand{
+      font-size:20px;
+      font-weight:700;
+      letter-spacing:-0.3px;
+    }
+    
+    .sidebar-brand-primary{
+      background:var(--gradient-blue);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+    
+    .sidebar-brand-secondary{color:var(--text-primary)}
+    
+    .sidebar-tagline{
+      font-size:11px;
+      color:var(--text-muted);
+      font-weight:500;
+      margin-left:49px;
+    }
+    
+    .sidebar-nav{
+      flex:1;
+      padding:16px 12px;
+      overflow-y:auto;
+    }
+    
+    .nav-section-title{
+      font-size:11px;
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      color:var(--text-muted);
+      margin-bottom:8px;
+      padding:0 12px;
+    }
+    
+    .nav-item{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:12px;
+      border-radius:10px;
+      color:var(--text-secondary);
+      cursor:pointer;
+      transition:all 0.15s;
+      font-size:14px;
+      font-weight:500;
+      margin-bottom:4px;
+    }
+    
+    .nav-item:hover{
+      background:var(--bg-elevated);
+      color:var(--text-primary);
+    }
+    
+    .nav-item.active{
+      background:rgba(59,130,246,0.15);
+      color:var(--accent-blue);
+    }
+    
+    .sidebar-footer{
+      padding:16px;
+      border-top:1px solid var(--border);
+    }
+    
+    .user-card{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:12px;
+      background:var(--bg-card);
+      border-radius:10px;
+    }
+    
+    .user-avatar{
+      width:36px;
+      height:36px;
+      border-radius:50%;
+      background:var(--gradient-blue);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:600;
+      font-size:14px;
+    }
+    
+    .powered-by{
+      text-align:center;
+      font-size:11px;
+      color:var(--text-muted);
+      padding:8px;
+    }
+    
+    .powered-by a{
+      color:var(--accent-blue);
+      text-decoration:none;
+      font-weight:600;
+    }
+    
+    .powered-by a:hover{
+      text-decoration:underline;
+    }
+    
+    .main-content{
+      flex:1;
+      margin-left:280px;
+      min-height:100vh;
+      display:flex;
+      flex-direction:column;
+    }
+    
+    .page-header{
+      padding:20px 32px;
+      border-bottom:1px solid var(--border);
+      background:var(--bg-secondary);
+      position:sticky;
+      top:0;
+      z-index:50;
+    }
+    
+    .page-content{
+      padding:24px 32px;
+      flex:1;
+    }
+    
+    .page-footer{
+      padding:16px 32px;
+      border-top:1px solid var(--border);
+      background:var(--bg-secondary);
+      text-align:center;
+      font-size:11px;
+      color:var(--text-muted);
+    }
+    
+    .page-footer a{
+      color:var(--accent-blue);
+      text-decoration:none;
+      font-weight:600;
+    }
+    
+    .page-footer a:hover{
+      text-decoration:underline;
+    }
+
+    /* Horizontal Progress Stepper */
+    .progress-stepper{
+      background:var(--bg-card);
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:24px 32px;
+      margin-bottom:24px;
+      position:sticky;
+      top:85px;
+      z-index:45;
+      box-shadow:var(--shadow-md);
+    }
+
+    .stepper-container{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      position:relative;
+    }
+
+    .stepper-line{
+      position:absolute;
+      top:20px;
+      left:60px;
+      right:60px;
+      height:3px;
+      background:var(--border);
+      z-index:0;
+      border-radius:2px;
+      overflow:hidden;
+    }
+
+    .stepper-line-progress{
+      height:100%;
+      background:var(--gradient-blue);
+      transition:width 0.5s ease;
+      border-radius:2px;
+    }
+
+    .stepper-step{
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:12px;
+      flex:1;
+      position:relative;
+      z-index:1;
+    }
+
+    .stepper-circle{
+      width:40px;
+      height:40px;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-weight:700;
+      font-size:16px;
+      transition:all 0.3s ease;
+      border:3px solid var(--border);
+      background:var(--bg-card);
+    }
+
+    .stepper-step.completed .stepper-circle{
+      background:var(--accent-green);
+      border-color:var(--accent-green);
+      color:white;
+    }
+
+    .stepper-step.active .stepper-circle{
+      background:var(--accent-blue);
+      border-color:var(--accent-blue);
+      color:white;
+      animation:pulse-ring 2s infinite;
+    }
+
+    .stepper-step.pending .stepper-circle{
+      background:var(--bg-secondary);
+      border-color:var(--border);
+      color:var(--text-muted);
+    }
+
+    @keyframes pulse-ring{
+      0%{box-shadow:0 0 0 0 rgba(59,130,246,0.7)}
+      50%{box-shadow:0 0 0 10px rgba(59,130,246,0)}
+      100%{box-shadow:0 0 0 0 rgba(59,130,246,0)}
+    }
+
+    .stepper-label{
+      font-size:13px;
+      font-weight:600;
+      text-align:center;
+      max-width:120px;
+      transition:all 0.3s ease;
+    }
+
+    .stepper-step.completed .stepper-label{
+      color:var(--accent-green);
+    }
+
+    .stepper-step.active .stepper-label{
+      color:var(--accent-blue);
+    }
+
+    .stepper-step.pending .stepper-label{
+      color:var(--text-muted);
+    }
+
+    .stepper-sublabel{
+      font-size:11px;
+      color:var(--text-muted);
+      text-align:center;
+      margin-top:-8px;
+    }
+    
+    .btn{
+      padding:10px 20px;
+      border-radius:8px;
+      border:none;
+      font-family:inherit;
+      font-size:14px;
+      font-weight:600;
+      cursor:pointer;
+      transition:all 0.2s;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    
+    .btn-primary{
+      background:var(--gradient-blue);
+      color:white;
+      box-shadow:0 4px 14px rgba(59,130,246,0.3);
+    }
+    
+    .btn-primary:hover{
+      transform:translateY(-1px);
+    }
+    
+    .btn-primary:disabled{
+      opacity:0.5;
+      cursor:not-allowed;
+      transform:none;
+    }
+    
+    .btn-secondary{
+      background:var(--bg-elevated);
+      color:var(--text-primary);
+      border:1px solid var(--border);
+    }
+    
+    .btn-secondary:hover{
+      background:var(--border);
+    }
+    
+    .btn-success{
+      background:var(--gradient-green);
+      color:white;
+    }
+    
+    .btn-ghost{
+      background:transparent;
+      color:var(--text-secondary);
+      padding:8px 12px;
+    }
+    
+    .btn-ghost:hover{
+      color:var(--text-primary);
+      background:var(--bg-elevated);
+    }
+    
+    .btn-sm{
+      padding:6px 12px;
+      font-size:13px;
+    }
+    
+    .btn-xs{
+      padding:4px 8px;
+      font-size:11px;
+      border-radius:6px;
+    }
+    
+    .processing-banner{
+      background:rgba(59,130,246,0.1);
+      border:1px solid var(--accent-blue);
+      border-radius:12px;
+      padding:16px 20px;
+      margin-bottom:24px;
+      display:flex;
+      align-items:center;
+      gap:16px;
+      position:relative;
+    }
+    
+    .processing-banner .close-btn{
+      position:absolute;
+      top:12px;
+      right:12px;
+      background:none;
+      border:none;
+      color:var(--text-muted);
+      font-size:20px;
+      cursor:pointer;
+      padding:4px 8px;
+      border-radius:4px;
+      transition:all 0.15s;
+    }
+    
+    .processing-banner .close-btn:hover{
+      background:var(--bg-elevated);
+      color:var(--text-primary);
+    }
+    
+    .processing-details{flex:1}
+    
+    .processing-progress{
+      font-size:11px;
+      color:var(--text-muted);
+      margin-top:4px;
+      font-family:monospace;
+    }
+    
+    .processing-progress-bar{
+      width:100%;
+      height:4px;
+      background:var(--bg-secondary);
+      border-radius:2px;
+      margin-top:8px;
+      overflow:hidden;
+    }
+    
+    .processing-progress-fill{
+      height:100%;
+      background:var(--gradient-blue);
+      border-radius:2px;
+      animation:progressFlow 12s linear forwards;
+    }
+    
+    @keyframes progressFlow{
+      0%{width:0%}
+      100%{width:100%}
+    }
+    
+    .processing-actions{display:flex;gap:8px}
+    
+    .processing-spinner{
+      width:24px;
+      height:24px;
+      border:3px solid var(--border);
+      border-top-color:var(--accent-cyan);
+      border-radius:50%;
+      animation:spin 1s linear infinite;
+    }
+    
+    @keyframes spin{
+      to{transform:rotate(360deg)}
+    }
+    
+    .table-container{
+      background:var(--bg-card);
+      border:1px solid var(--border);
+      border-radius:12px;
+      overflow:hidden;
+    }
+    
+    table{
+      width:100%;
+      border-collapse:collapse;
+    }
+    
+    th,td{
+      padding:14px 16px;
+      text-align:left;
+      border-bottom:1px solid var(--border);
+    }
+    
+    th{
+      background:var(--bg-secondary);
+      font-size:12px;
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      color:var(--text-muted);
+      user-select:none;
+      white-space:nowrap;
+    }
+    
+    th.sortable{
+      cursor:pointer;
+    }
+    
+    th.sortable:hover{
+      color:var(--text-primary);
+      background:var(--bg-elevated);
+    }
+    
+    th.sortable::after{
+      content:'⇅';
+      margin-left:8px;
+      opacity:0.3;
+      font-size:10px;
+    }
+    
+    th.sorted-asc::after{
+      content:'↑';
+      opacity:1;
+      color:var(--accent-blue);
+    }
+    
+    th.sorted-desc::after{
+      content:'↓';
+      opacity:1;
+      color:var(--accent-blue);
+    }
+    
+    tr:last-child td{border-bottom:none}
+    
+    tbody tr{
+      transition:background 0.15s;
+      cursor:pointer;
+    }
+    
+    tbody tr:hover{
+      background:var(--bg-elevated);
+    }
+    
+    .project-link{
+      color:var(--text-primary);
+      font-weight:600;
+    }
+    
+    .project-link:hover{color:var(--accent-blue)}
+    
+    .text-right{text-align:right}
+    
+    .status{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      font-size:13px;
+      font-weight:500;
+    }
+    
+    .status-dot{
+      width:8px;
+      height:8px;
+      border-radius:50%;
+    }
+    
+    .status.draft .status-dot{background:var(--text-muted)}
+    
+    .status.processing .status-dot{
+      background:var(--accent-blue);
+      animation:pulse 1.5s infinite;
+    }
+    
+    .status.needs-review .status-dot{background:var(--accent-yellow)}
+    
+    .status.ready .status-dot{background:var(--accent-green)}
+    
+    .status.exported .status-dot{background:var(--accent-cyan)}
+    
+    @keyframes pulse{
+      0%,100%{opacity:1}
+      50%{opacity:0.4}
+    }
+    
+    .coverage{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+    }
+    
+    .coverage-bar{
+      width:60px;
+      height:6px;
+      background:var(--bg-secondary);
+      border-radius:3px;
+      overflow:hidden;
+      border:1px solid var(--border);
+    }
+    
+    .coverage-fill{
+      height:100%;
+      border-radius:2px;
+      transition:width 0.3s ease;
+      display:block;
+    }
+    
+    .coverage-fill.green{background:var(--accent-green)}
+    
+    .coverage-fill.yellow{background:var(--accent-yellow)}
+    
+    .coverage-fill.red{background:var(--accent-red)}
+    
+    .flag-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      padding:3px 8px;
+      border-radius:6px;
+      font-size:11px;
+      font-weight:600;
+      background:rgba(245,158,11,0.15);
+      color:var(--accent-yellow);
+    }
+    
+    .quote-count{
+      display:inline-flex;
+      align-items:center;
+      gap:4px;
+      padding:3px 8px;
+      border-radius:6px;
+      font-size:11px;
+      font-weight:600;
+      background:rgba(59,130,246,0.15);
+      color:var(--accent-blue);
+    }
+    
+    .modal-overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.8);
+      backdrop-filter:blur(4px);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      z-index:200;
+      padding:20px;
+    }
+    
+    .modal{
+      background:var(--bg-card);
+      border:1px solid var(--border);
+      border-radius:20px;
+      max-width:600px;
+      width:100%;
+      max-height:85vh;
+      overflow:hidden;
+      box-shadow:var(--shadow-lg);
+    }
+    
+    .modal-lg{max-width:900px}
+    
+    .modal-header{
+      padding:20px 24px;
+      border-bottom:1px solid var(--border);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    
+    .modal-body{
+      padding:24px;
+      overflow-y:auto;
+      max-height:65vh;
+    }
+    
+    .modal-footer{
+      padding:16px 24px;
+      border-top:1px solid var(--border);
+      display:flex;
+      justify-content:flex-end;
+      gap:12px;
+    }
+    
+    .modal-close{
+      background:none;
+      border:none;
+      color:var(--text-muted);
+      font-size:24px;
+      cursor:pointer;
+    }
+    
+    .modal-close:hover{color:var(--text-primary)}
+    
+    .upload-zone{
+      border:2px dashed var(--border);
+      border-radius:12px;
+      padding:32px;
+      text-align:center;
+      cursor:pointer;
+      transition:all 0.3s;
+      background:rgba(59,130,246,0.02);
+    }
+    
+    .upload-zone:hover{
+      border-color:var(--accent-blue);
+      background:rgba(59,130,246,0.05);
+    }
+    
+    .upload-zone.active{
+      border-color:var(--accent-green);
+      border-style:solid;
+      background:rgba(16,185,129,0.08);
+    }
+    
+    .category-section{margin-bottom:32px}
+    
+    .category-header{
+      font-size:12px;
+      font-weight:600;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      color:var(--text-muted);
+      margin-bottom:12px;
+      padding-bottom:8px;
+      border-bottom:1px solid var(--border);
+    }
+    
+    .category-row{
+      display:flex;
+      align-items:center;
+      padding:16px;
+      background:var(--bg-card);
+      border:1px solid var(--border);
+      border-radius:10px;
+      margin-bottom:8px;
+      cursor:pointer;
+      transition:all 0.15s;
+    }
+    
+    .category-row:hover{
+      border-color:var(--border-light);
+      background:var(--bg-elevated);
+    }
+    
+    .category-row.expanded{
+      background:var(--bg-elevated);
+      margin-bottom:0;
+      border-bottom-left-radius:0;
+      border-bottom-right-radius:0;
+    }
+    
+    .category-status{
+      width:32px;
+      font-size:18px;
+    }
+    
+    .category-info{flex:1}
+    
+    .category-name{
+      font-weight:600;
+      margin-bottom:2px;
+    }
+    
+    .category-detail{
+      font-size:13px;
+      color:var(--text-muted);
+    }
+    
+    .category-vendor{
+      width:180px;
+      color:var(--text-secondary);
+      font-size:14px;
+    }
+    
+    .category-price{
+      width:100px;
+      text-align:right;
+      font-weight:600;
+    }
+    
+    .category-action{
+      width:40px;
+      text-align:right;
+      font-size:18px;
+      color:var(--text-muted);
+    }
+    
+    .category-row.conflict{
+      border-left:3px solid var(--accent-yellow);
+    }
+    
+    .category-row.missing{
+      border-left:3px solid var(--accent-red);
+      background:rgba(239,68,68,0.05);
+    }
+    
+    .category-row.selected{
+      background:rgba(16,185,129,0.1);
+      border-color:var(--accent-green);
+    }
+    
+    .quotes-list{
+      background:var(--bg-secondary);
+      border:1px solid var(--border);
+      border-top:none;
+      border-bottom-left-radius:10px;
+      border-bottom-right-radius:10px;
+      padding:16px;
+      margin-bottom:8px;
+    }
+    
+    .quote-item{
+      background:var(--bg-card);
+      border:2px solid var(--border);
+      border-radius:8px;
+      padding:14px;
+      margin-bottom:10px;
+      cursor:pointer;
+      transition:all 0.15s;
+    }
+    
+    .quote-item:last-child{margin-bottom:0}
+    
+    .quote-item:hover{
+      border-color:var(--border-light);
+      background:var(--bg-elevated);
+    }
+    
+    .quote-item.selected{
+      border-color:var(--accent-green);
+      background:rgba(16,185,129,0.08);
+    }
+    
+    .quote-item.flagged{
+      border-left:4px solid var(--accent-yellow);
+    }
+    
+    .quote-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      margin-bottom:8px;
+    }
+    
+    .quote-vendor{
+      font-weight:600;
+      font-size:15px;
+    }
+    
+    .quote-price{
+      font-weight:700;
+      font-size:16px;
+      color:var(--accent-green);
+    }
+    
+    .quote-details{
+      font-size:12px;
+      color:var(--text-muted);
+      margin-bottom:8px;
+    }
+    
+    .quote-flag{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 12px;
+      background:rgba(245,158,11,0.1);
+      border-left:3px solid var(--accent-yellow);
+      border-radius:4px;
+      font-size:12px;
+      color:var(--text-secondary);
+      margin-top:8px;
+    }
+    
+    .quote-actions{
+      display:flex;
+      gap:8px;
+      margin-top:12px;
+    }
+    
+    .detail-alert{
+      background:rgba(245,158,11,0.1);
+      border:1px solid var(--accent-yellow);
+      border-radius:10px;
+      padding:16px;
+      margin-bottom:20px;
+    }
+    
+    .detail-section{
+      margin-bottom:24px;
+    }
+    
+    .detail-section h3{
+      font-size:16px;
+      font-weight:600;
+      margin-bottom:12px;
+      color:var(--text-primary);
+    }
+    
+    .detail-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px;
+      margin-bottom:16px;
+    }
+    
+    .detail-item{
+      background:var(--bg-secondary);
+      padding:12px;
+      border-radius:8px;
+      border:1px solid var(--border);
+    }
+    
+    .detail-label{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+      color:var(--text-muted);
+      margin-bottom:4px;
+    }
+    
+    .detail-value{
+      font-size:15px;
+      font-weight:600;
+      color:var(--text-primary);
+    }
+    
+    .exclusions-list{
+      color:var(--text-muted);
+      padding-left:20px;
+    }
+    
+    .exclusions-list li{margin-bottom:6px}
+    
+    .export-option{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      padding:12px;
+      background:var(--bg-secondary);
+      border-radius:8px;
+      margin-bottom:8px;
+    }
+    
+    .export-option input{
+      width:18px;
+      height:18px;
+    }
+
+    .success-toast{
+      position:fixed;
+      bottom:24px;
+      right:24px;
+      background:var(--accent-green);
+      color:white;
+      padding:16px 24px;
+      border-radius:10px;
+      box-shadow:var(--shadow-lg);
+      display:flex;
+      align-items:center;
+      gap:12px;
+      font-weight:600;
+      animation:slideIn 0.3s ease;
+      z-index:300;
+    }
+
+    @keyframes slideIn{
+      from{
+        transform:translateX(400px);
+        opacity:0;
+      }
+      to{
+        transform:translateX(0);
+        opacity:1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const{useState,useEffect,useRef,useCallback}=React;
+    const MOCK_USER={name:'John Martinez',company:'Summit Mechanical',initials:'JM'};
+    
+    const INITIAL_PROJECTS=[
+      {id:'medical-office-westside',name:'Medical Office - Westside Plaza',client:'Westside Healthcare Group',location:'Houston, TX',bidDate:'2025-08-22',bidTime:'10:00 AM',coverage:88,gaps:1,conflicts:1,flags:['Spec mismatch on RTU','Missing Grilles quotes'],quoteCount:12,status:'needs-review',created:'2023-08-15T14:30:00',workflowStep:3},
+      {id:'tech-campus-building-c',name:'Tech Campus Building C',client:'Innovation Properties LLC',location:'Austin, TX',bidDate:'2025-08-15',bidTime:'3:00 PM',coverage:97,gaps:1,conflicts:1,flags:['Spec mismatch on RTU','Missing Grilles quotes'],quoteCount:12,status:'needs-review',created:'2023-08-01T09:15:00',workflowStep:3},
+      {id:'municipal-library-renovation',name:'Municipal Library Renovation',client:'City of Dallas',location:'Dallas, TX',bidDate:'2026-01-20',bidTime:'2:00 PM',coverage:94,gaps:1,conflicts:1,flags:['Spec mismatch on RTU','Missing Grilles quotes'],quoteCount:12,status:'needs-review',created:'2023-07-10T16:20:00',workflowStep:3},
+    ];
+    
+    const MOCK_CATEGORIES={
+      subcontractors:[
+        {
+          id:'controls',
+          name:'Building Controls & Automation',
+          detail:'DDC controls, sensors, integration',
+          status:'covered',
+          quotes:[
+            {id:'q1',vendor:'Vector Building Controls',price:28500,selected:true,items:15,details:'Complete DDC system with web-based interface',flags:[],scope:'Full building automation system including all sensors, controllers, and software licenses',lead:'8-10 weeks',warranty:'2 years parts and labor'},
+            {id:'q2',vendor:'Integrated Control Solutions',price:31200,selected:false,items:15,details:'Enterprise-grade system with mobile app',flags:[],scope:'Premium system with advanced analytics and mobile control',lead:'10-12 weeks',warranty:'3 years parts, 1 year labor'},
+            {id:'q3',vendor:'CoreTech Building Controls',price:26800,selected:false,items:14,details:'Standard system, basic reporting',flags:[],scope:'Basic DDC system with standard reporting',lead:'6-8 weeks',warranty:'1 year parts and labor'},
+          ]
+        },
+        {
+          id:'tab',
+          name:'Testing & Balancing',
+          detail:'Air and hydronic balancing, commissioning',
+          status:'covered',
+          quotes:[
+            {id:'q1',vendor:'Balanced Air Solutions',price:18900,selected:true,items:1,details:'Complete TAB with NEBB certification',flags:[],scope:'Full air and hydronic TAB, commissioning, and documentation',lead:'Schedule after substantial completion',warranty:'Re-balance included if issues found within 90 days'},
+            {id:'q2',vendor:'Premier TAB Services',price:17500,selected:false,items:1,details:'Standard TAB service',flags:[],scope:'Standard TAB service with basic reporting',lead:'Schedule after substantial completion',warranty:'Does not include re-balance'},
+          ]
+        }
+      ],
+      equipment:[
+        {
+          id:'rtu',
+          name:'Rooftop Units',
+          detail:'RTU-1 through RTU-4 (5-ton units)',
+          status:'conflict',
+          quotes:[
+            {id:'q1',vendor:'Trane',price:24800,selected:true,items:4,details:'Precedent series, 16 SEER',flags:[{type:'spec',text:'Quoted 14 SEER, spec calls for 16 SEER'}],scope:'4x 5-ton rooftop units, economizers included',lead:'8-10 weeks',warranty:'5 years compressor, 1 year parts'},
+            {id:'q2',vendor:'Carrier',price:26400,selected:false,items:4,details:'WeatherMaster series, 16 SEER',flags:[],scope:'4x 5-ton rooftop units with advanced controls',lead:'8-10 weeks',warranty:'5 years compressor, 1 year parts'},
+            {id:'q3',vendor:'Daikin',price:25200,selected:false,items:4,details:'Rebel series, 17 SEER',flags:[],scope:'4x 5-ton units, exceeds efficiency requirements',lead:'6-8 weeks',warranty:'7 years compressor, 2 years parts'},
+          ]
+        },
+        {
+          id:'grilles',
+          name:'Grilles, Registers & Diffusers',
+          detail:'Supply/return grilles, ceiling diffusers',
+          status:'missing',
+          quotes:[]
+        },
+        {
+          id:'exhaust',
+          name:'Exhaust Fans',
+          detail:'EF-1 through EF-6 (various CFM)',
+          status:'covered',
+          quotes:[
+            {id:'q1',vendor:'Price Industries',price:4850,selected:true,items:6,details:'Wall-mounted, direct drive',flags:[],scope:'6 exhaust fans ranging from 500-1200 CFM',lead:'4-6 weeks',warranty:'1 year parts'},
+            {id:'q2',vendor:'Titus',price:5100,selected:false,items:6,details:'Ceiling-mounted option available',flags:[],scope:'6 exhaust fans with flexible mounting options',lead:'6-8 weeks',warranty:'1 year parts'},
+          ]
+        },
+      ],
+      materials:[
+        {
+          id:'rect-duct',
+          name:'Rectangular Ductwork',
+          detail:'Galvanized steel, various sizes',
+          status:'covered',
+          quotes:[
+            {id:'q1',vendor:'Precision Ductwork',price:18250,selected:true,items:145,details:'26ga galvanized, TDC/TDF construction',flags:[],scope:'Complete rectangular ductwork system per plans',lead:'Fabricate to schedule',warranty:'Workmanship warranty'},
+            {id:'q2',vendor:'Gulf Coast Sheet Metal',price:19800,selected:false,items:145,details:'24ga galvanized, reinforced',flags:[],scope:'Premium gauge ductwork with reinforcement',lead:'Fabricate to schedule',warranty:'Workmanship warranty'},
+          ]
+        },
+        {
+          id:'spiral',
+          name:'Spiral Duct & Fittings',
+          detail:'Round spiral duct, fittings',
+          status:'covered',
+          quotes:[
+            {id:'q1',vendor:'Precision Ductwork',price:8420,selected:true,items:48,details:'Spiral lockseam, galvanized',flags:[],scope:'Spiral duct and all fittings per plans',lead:'Fabricate to schedule',warranty:'Workmanship warranty'},
+            {id:'q2',vendor:'Gulf Coast Sheet Metal',price:7950,selected:false,items:42,details:'Spiral duct only',flags:[],scope:'Spiral duct, standard fittings only',lead:'Fabricate to schedule',warranty:'Workmanship warranty'},
+          ]
+        },
+        {id:'piping',
+          name:'HVAC Piping System',
+          detail:'Chilled water and condensate piping',
+          status:'covered',
+          quotes:[
+            {id:'q1',vendor:'Apex Plumbing and Mechanical',price:32400,selected:true,items:1,details:'Complete piping package with insulation',flags:[],scope:'All HVAC piping including chilled water, condensate, and insulation',lead:'Material to job schedule',warranty:'1 year workmanship'},
+          ]
+        }
+      ]
+    };
+    
+    const Logo = ({ size = 'medium' }) => {
+      const dimensions = size === 'large' ? 150 : 120;
+      return (
+        <img
+          src="logo.png"
+          alt="BIMTEQ Logo"
+          width={dimensions}
+          height={dimensions}
+          className={size === 'large' ? 'login-logo-img' : 'sidebar-logo-img'}
+        />
+      );
+    };
+
+    const StatusBadge=({status})=>{
+      const labels={
+        draft:'Draft',
+        processing:'Processing',
+        'needs-review':'Needs Review',
+        ready:'Ready',
+        exported:'Exported'
+      };
+      return<span className={`status ${status}`}><span className="status-dot"></span>{labels[status]}</span>
+    };
+    
+    const CoverageBadge=({value})=>{
+      const color=value>=95?'green':value>=80?'yellow':'red';
+      return(
+        <span className="coverage">
+          <span className="coverage-bar">
+            <span className={`coverage-fill ${color}`} style={{width:`${value}%`}}></span>
+          </span>
+          <span>{value}%</span>
+        </span>
+      );
+    };
+    
+    const CategoryIcon=({status})=>{
+      const icons={covered:'✓',conflict:'⚠',partial:'⚠',missing:'✗'};
+      const colors={covered:'var(--accent-green)',conflict:'var(--accent-yellow)',partial:'var(--accent-yellow)',missing:'var(--accent-red)'};
+      return<span style={{color:colors[status]}}>{icons[status]}</span>
+    };
+
+    const ProgressStepper=({currentStep})=>{
+      const steps=[
+        {num:1,label:'Upload Documents'},
+        {num:2,label:'Review Quotes'},
+        {num:3,label:'Resolve Conflicts'},
+        {num:4,label:'Export Package'}
+      ];
+
+      const getStepClass=(stepNum)=>{
+        if(stepNum<currentStep)return'completed';
+        if(stepNum===currentStep)return'active';
+        return'pending';
+      };
+
+      const progressPercent=((currentStep-1)/(steps.length-1))*100;
+
+      return(
+        <div className="progress-stepper">
+          <div className="stepper-container">
+            <div className="stepper-line">
+              <div className="stepper-line-progress" style={{width:`${progressPercent}%`}}></div>
+            </div>
+            {steps.map(step=>(
+              <div key={step.num} className={`stepper-step ${getStepClass(step.num)}`}>
+                <div className="stepper-circle">
+                  {getStepClass(step.num)==='completed'?'✓':step.num}
+                </div>
+                <div>
+                  <div className="stepper-label">{step.label}</div>
+                  <div className="stepper-sublabel">{step.sublabel}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    };
+
+    const Toast=({message,onClose})=>{
+      useEffect(()=>{
+        const timer=setTimeout(onClose,3000);
+        return()=>clearTimeout(timer);
+      },[onClose]);
+
+      return(
+        <div className="success-toast">
+          <span style={{fontSize:20}}>✓</span>
+          <span>{message}</span>
+        </div>
+      );
+    };
+
+    const LoginPage=({onLogin})=>(
+      <div className="login-container">
+        <div className="login-card">
+          <div className="login-logo-container">
+            <Logo size="large" />
+          </div>
+          <div className="login-brand">
+            <span className="login-brand-primary">BIMTEQ</span>
+            <span className="login-brand-secondary">ARGUS</span>
+          </div>
+          <div className="login-subtitle">Quote Intelligence Platform</div>
+          <div className="form-group">
+            <label className="form-label">Email</label>
+            <input className="form-input" defaultValue="john@summitmechanical.com"/>
+          </div>
+          <div className="form-group">
+            <label className="form-label">Password</label>
+            <input type="password" className="form-input" defaultValue="••••••••"/>
+          </div>
+          <button className="login-btn" onClick={onLogin}>Sign In</button>
+          <div className="powered-by" style={{marginTop:24,textAlign:'center',fontSize:12}}>
+            Powered by <a href="https://symplii.ai" target="_blank" rel="noopener">Symplii.ai</a>
+          </div>
+        </div>
+      </div>
+    );
+
+    const Sidebar=({currentPage,onNavigate,onLogout})=>(
+      <div className="sidebar">
+        <div className="sidebar-header">
+          <div className="sidebar-logo-container">
+            <Logo size="small" />
+            <div className="sidebar-brand">
+              <span className="sidebar-brand-primary">BIMTEQ</span>
+              <span className="sidebar-brand-secondary"> ARGUS</span>
+            </div>
+          </div>
+          <div className="sidebar-tagline">Quote Intelligence  Platform</div>
+        </div>
+        <nav className="sidebar-nav">
+          <div className="nav-section-title">Navigation</div>
+          <div className={`nav-item ${currentPage==='projects'?'active':''}`} onClick={()=>onNavigate('projects')}>
+            <span className="nav-item-icon">📁</span>Projects
+          </div>
+          <div className="nav-item" onClick={()=>onNavigate('new-project')}>
+            <span className="nav-item-icon">➕</span>New Project
+          </div>
+          <div style={{height:16}}></div>
+          <div className="nav-item" style={{opacity:0.5}}>
+            <span className="nav-item-icon">👥</span>Vendor Database
+          </div>
+          <div className="nav-item" style={{opacity:0.5}}>
+            <span className="nav-item-icon">⚙️</span>Settings
+          </div>
+        </nav>
+        <div className="sidebar-footer">
+          <div className="user-card">
+            <div className="user-avatar">{MOCK_USER.initials}</div>
+            <div>
+              <div style={{fontWeight:500,fontSize:14}}>{MOCK_USER.name}</div>
+              <div style={{fontSize:12,color:'var(--text-muted)'}}>{MOCK_USER.company}</div>
+            </div>
+          </div>
+          <button className="btn btn-ghost w-full" style={{justifyContent:'center'}} onClick={onLogout}>Sign Out</button>
+          <div className="powered-by">
+            Powered by <a href="https://symplii.ai" target="_blank" rel="noopener">Symplii.ai</a>
+          </div>
+        </div>
+      </div>
+    );
+
+    const ProjectsPage=({onNavigate,processingProject,projects})=>{
+      const[sortField,setSortField]=useState('created');
+      const[sortDir,setSortDir]=useState('desc');
+      const[globalSearch,setGlobalSearch]=useState('');
+      const[showProcessing,setShowProcessing]=useState(true);
+      const[currentFile,setCurrentFile]=useState('Municipal Convention Center BOM.xlsm');
+
+      useEffect(()=>{
+        if(processingProject&&showProcessing){
+          const files=[
+            'Municipal Convention Center BOM.xlsm',
+            'Precision Ductwork Quote.pdf',
+            'Trane Equipment.pdf',
+            'Vector Controls Quote.pdf',
+            'Balanced Air TAB Proposal.pdf',
+            'Cross-referencing all quotes with BOM'
+          ];
+          let index=0;
+          setCurrentFile(files[0]);
+          const interval=setInterval(()=>{
+            index=(index+1)%files.length;
+            setCurrentFile(files[index]);
+          },2000);
+          return()=>clearInterval(interval);
+        }
+      },[processingProject,showProcessing]);
+
+      const handleSort=(field)=>{
+        if(sortField===field){
+          setSortDir(d=>d==='asc'?'desc':'asc');
+        }else{
+          setSortField(field);
+          setSortDir('asc');
+        }
+      };
+
+      let filtered=projects;
+      
+      if(globalSearch){
+        filtered=filtered.filter(p=>
+          Object.values(p).some(v=>
+            String(v).toLowerCase().includes(globalSearch.toLowerCase())
+          )
+        );
+      }
+
+      const sorted=[...filtered].sort((a,b)=>{
+        let aVal=a[sortField];
+        let bVal=b[sortField];
+        
+        if(sortField==='created'){
+          aVal=new Date(aVal);
+          bVal=new Date(bVal);
+        }
+        
+        const cmp=aVal<bVal?-1:aVal>bVal?1:0;
+        return sortDir==='asc'?cmp:-cmp;
+      });
+
+      const handleRowClick=(projectId)=>{
+        onNavigate('project-detail',projectId);
+      };
+
+      return<>
+        <div className="page-header">
+          <div className="flex justify-between items-center">
+            <div>
+              <h1 style={{fontSize:22,fontWeight:700}}>Projects</h1>
+              <p className="text-muted text-sm">
+                {sorted.length} of {projects.length} projects
+                {globalSearch&&<span> • Search active</span>}
+              </p>
+            </div>
+            <button className="btn btn-primary" onClick={()=>onNavigate('new-project')}>
+              ➕ New Project
+            </button>
+          </div>
+        </div>
+        
+        <div className="page-content">
+          <div className="search-bar">
+            <span className="search-icon">🔍</span>
+            <input 
+              type="text"
+              className="search-input"
+              placeholder="Search projects..."
+              value={globalSearch}
+              onChange={(e)=>setGlobalSearch(e.target.value)}
+            />
+          </div>
+
+          {processingProject&&showProcessing&&(
+            <div className="processing-banner dismissible">
+              <button className="close-btn" onClick={()=>setShowProcessing(false)} title="Dismiss (processing continues in background)">×</button>
+              <div className="processing-spinner"></div>
+              <div className="processing-details">
+                <div className="font-semibold">Analyzing: {processingProject}</div>
+                <div className="text-sm text-muted">Processing vendor quotes in background — feel free to work on other projects</div>
+                <div className="processing-progress">Currently analyzing: {currentFile}</div>
+                <div className="processing-progress-bar">
+                  <div className="processing-progress-fill"></div>
+                </div>
+              </div>
+              <div className="processing-actions">
+                <button className="btn btn-sm btn-secondary" onClick={()=>onNavigate('project-detail','convention-center')}>View Details</button>
+              </div>
+            </div>
+          )}
+          
+          <div className="table-container">
+            <table>
+              <thead>
+                <tr>
+                  <th className={`sortable ${sortField==='name'?'sorted-'+sortDir:''}`} onClick={()=>handleSort('name')}>
+                    Project
+                  </th>
+                  <th className={`sortable ${sortField==='client'?'sorted-'+sortDir:''}`} onClick={()=>handleSort('client')}>
+                    Client
+                  </th>
+                  <th className={`sortable ${sortField==='location'?'sorted-'+sortDir:''}`} onClick={()=>handleSort('location')}>
+                    Location
+                  </th>
+                  <th className={`sortable ${sortField==='bidDate'?'sorted-'+sortDir:''}`} onClick={()=>handleSort('bidDate')}>
+                    Bid Date
+                  </th>
+                  <th className={`sortable ${sortField==='coverage'?'sorted-'+sortDir:''}`} onClick={()=>handleSort('coverage')}>
+                    Coverage
+                  </th>
+                  <th className={`sortable ${sortField==='gaps'?'sorted-'+sortDir:''}`} onClick={()=>handleSort('gaps')}>
+                    Gaps
+                  </th>
+                  <th className={`sortable ${sortField==='conflicts'?'sorted-'+sortDir:''}`} onClick={()=>handleSort('conflicts')}>
+                    Issues
+                  </th>
+                  <th className={`sortable ${sortField==='status'?'sorted-'+sortDir:''}`} onClick={()=>handleSort('status')}>
+                    Status
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {sorted.map(p=>(
+                  <tr key={p.id} onClick={()=>handleRowClick(p.id)}>
+                    <td>
+                      <span className="project-link">
+                        {p.name}
+                      </span>
+                    </td>
+                    <td className="text-secondary">{p.client}</td>
+                    <td className="text-secondary">{p.location}</td>
+                    <td className="text-secondary">{p.bidDate} @ {p.bidTime}</td>
+                    <td><CoverageBadge value={p.coverage}/></td>
+                    <td style={{color:p.gaps>0?'var(--accent-red)':'var(--accent-green)',fontWeight:600}}>
+                      {p.gaps}
+                    </td>
+                    <td>
+                      <div className="flex gap-2 items-center">
+                        {p.conflicts>0&&<span className="flag-badge">⚠ {p.conflicts} conflicts</span>}
+                        {p.gaps>0&&<span className="flag-badge" style={{background:'rgba(239,68,68,0.2)',color:'var(--accent-red)'}}>✗ {p.gaps} missing</span>}
+                      </div>
+                      {(p.conflicts>0||p.gaps>0)&&p.flags&&p.flags.length>0&&(
+                        <div className="text-xs text-muted" style={{marginTop:4}}>
+                          {p.flags.map((flag,i)=>(
+                            <div key={i}>• {flag}</div>
+                          ))}
+                        </div>
+                      )}
+                      {p.conflicts===0&&p.gaps===0&&(
+                        <div className="text-xs" style={{marginTop:4,color:'var(--accent-green)',fontWeight:600}}>✓ No issues</div>
+                      )}
+                    </td>
+                    <td><StatusBadge status={p.status}/></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        
+        <div className="page-footer">
+          Powered by <a href="https://symplii.ai" target="_blank" rel="noopener">Symplii.ai</a>
+        </div>
+      </>;
+    };
+
+    const NewProjectModal=({onClose,onStart})=>{
+      const[uploaded,setUploaded]=useState(false);
+      const[files,setFiles]=useState(null);
+      const[formData,setFormData]=useState({
+        name:'',
+        client:'',
+        location:'',
+        bidDate:'',
+        bidTime:''
+      });
+      
+      const handleUpload=()=>{
+        setUploaded(true);
+        // Only fill empty fields with defaults; keep user-entered values
+        setFormData(prev=>({
+          name: prev.name || 'Municipal Convention Center',
+          client: prev.client || 'City of San Antonio',
+          location: prev.location || 'San Antonio, TX',
+          bidDate: prev.bidDate || '2023-09-15',
+          bidTime: prev.bidTime || '14:00'
+        }));
+        setFiles({
+          bom:{name:'Convention_Center_BOM.xlsm',type:'BOM',verified:true},
+          quotes:[
+            {name:'Precision_Ductwork_Quote.pdf',vendor:'Precision Ductwork',verified:true},
+            {name:'Trane_Equipment.pdf',vendor:'Trane',verified:true},
+            {name:'Vector_Controls_Quote.pdf',vendor:'Vector Building Controls',verified:true},
+            {name:'Balanced_Air_TAB.pdf',vendor:'Balanced Air Solutions',verified:true}
+          ]
+        });
+      };
+      
+      return(
+        <div className="modal-overlay" onClick={onClose}>
+          <div className="modal modal-lg" onClick={e=>e.stopPropagation()}>
+            <div className="modal-header">
+              <h2 style={{fontSize:20,fontWeight:600}}>New Project</h2>
+              <button className="modal-close" onClick={onClose}>×</button>
+            </div>
+            <div className="modal-body">
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:16,marginBottom:24}}>
+                <div className="form-group" style={{margin:0}}>
+                  <label className="form-label">Project Name *</label>
+                  <input 
+                    className="form-input" 
+                    value={formData.name}
+                    onChange={e=>setFormData({...formData,name:e.target.value})}
+                    placeholder="Auto-detected from docs"
+                  />
+                </div>
+                <div className="form-group" style={{margin:0}}>
+                  <label className="form-label">Client *</label>
+                  <select 
+                    className="form-select"
+                    value={formData.client}
+                    onChange={e=>setFormData({...formData,client:e.target.value})}
+                  >
+                    <option value="">Select or type new...</option>
+                    <option value="City of San Antonio">City of San Antonio</option>
+                    <option value="Westside Healthcare Group">Westside Healthcare Group</option>
+                    <option value="Innovation Properties LLC">Innovation Properties LLC</option>
+                  </select>
+                </div>
+                <div className="form-group" style={{margin:0}}>
+                  <label className="form-label">Location *</label>
+                  <input 
+                    className="form-input"
+                    value={formData.location}
+                    onChange={e=>setFormData({...formData,location:e.target.value})}
+                    placeholder="Auto-detected"
+                  />
+                </div>
+                <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+                  <div className="form-group" style={{margin:0}}>
+                    <label className="form-label">Bid Date *</label>
+                    <input 
+                      className="form-input" 
+                      type="date"
+                      value={formData.bidDate}
+                      onChange={e=>setFormData({...formData,bidDate:e.target.value})}
+                    />
+                  </div>
+                  <div className="form-group" style={{margin:0}}>
+                    <label className="form-label">Bid Time *</label>
+                    <select 
+                      className="form-select"
+                      value={formData.bidTime}
+                      onChange={e=>setFormData({...formData,bidTime:e.target.value})}
+                    >
+                      <option value="">Select time...</option>
+                      <option value="09:00">9:00 AM</option>
+                      <option value="10:00">10:00 AM</option>
+                      <option value="11:00">11:00 AM</option>
+                      <option value="12:00">12:00 PM</option>
+                      <option value="13:00">1:00 PM</option>
+                      <option value="14:00">2:00 PM</option>
+                      <option value="15:00">3:00 PM</option>
+                      <option value="16:00">4:00 PM</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+              
+              <label className="form-label">Upload Documents</label>
+              <div className={`upload-zone ${uploaded?'active':''}`} onClick={handleUpload}>
+                <div style={{fontSize:32,marginBottom:8}}>{uploaded?'✓':'📁'}</div>
+                <div className="font-semibold">{uploaded?'5 Files Detected':'Drop project folder or files here'}</div>
+                <div className="text-sm text-muted">{uploaded?'Click files below to verify detection':'Folders, ZIP, .xls, .pdf'}</div>
+              </div>
+              
+              {uploaded&&files&&(
+                <div className="mt-4">
+                  <div style={{marginBottom:12}}>
+                    <div className="text-sm font-semibold text-muted" style={{marginBottom:8}}>BILL OF MATERIALS (BOM)</div>
+                    <div style={{background:'var(--bg-secondary)',border:'1px solid var(--border)',borderRadius:8,padding:12,display:'flex',alignItems:'center',gap:12}}>
+                      <div style={{fontSize:20}}>📊</div>
+                      <div style={{flex:1}}>
+                        <div className="font-semibold">{files.bom.name}</div>
+                        <div className="text-sm text-muted">Excel Bill of Materials</div>
+                      </div>
+                      <div style={{color:'var(--accent-green)',fontSize:20}}>✓</div>
+                    </div>
+                  </div>
+                  
+                  <div>
+                    <div className="text-sm font-semibold text-muted" style={{marginBottom:8}}>VENDOR QUOTES ({files.quotes.length})</div>
+                    {files.quotes.map((q,i)=>(
+                      <div key={i} style={{background:'var(--bg-secondary)',border:'1px solid var(--border)',borderRadius:8,padding:12,display:'flex',alignItems:'center',gap:12,marginBottom:8}}>
+                        <div style={{fontSize:20}}>📄</div>
+                        <div style={{flex:1}}>
+                          <div className="font-semibold">{q.name}</div>
+                          <div className="text-sm text-muted">{q.vendor}</div>
+                        </div>
+                        <div style={{color:'var(--accent-green)',fontSize:20}}>✓</div>
+                      </div>
+                    ))}
+                  </div>
+                  
+                  <div style={{background:'rgba(6,182,212,0.1)',border:'1px solid var(--accent-cyan)',borderRadius:8,padding:12,marginTop:16,fontSize:13}}>
+                    <strong>💡 Tip:</strong> Analysis will run in the background. You can work on other projects and we'll notify you when complete.
+                  </div>
+                </div>
+              )}
+            </div>
+            <div className="modal-footer">
+              <button className="btn btn-secondary" onClick={onClose}>Cancel</button>
+              <button className="btn btn-primary" disabled={!uploaded} onClick={()=>onStart(formData)}>
+                Start Analysis
+              </button>
+            </div>
+          </div>
+        </div>
+      );
+    };
+
+    const QuoteDetailModal=({quote,onClose})=>(
+      <div className="modal-overlay" onClick={onClose}>
+        <div className="modal modal-lg" onClick={e=>e.stopPropagation()}>
+          <div className="modal-header">
+            <div>
+              <h2 style={{fontSize:20,fontWeight:600}}>{quote.vendor}</h2>
+              <p className="text-sm text-muted">{quote.details}</p>
+            </div>
+            <button className="modal-close" onClick={onClose}>×</button>
+          </div>
+          <div className="modal-body">
+            <div className="detail-grid">
+              <div className="detail-item">
+                <div className="detail-label">Total Price</div>
+                <div className="detail-value" style={{color:'var(--accent-green)',fontSize:24}}>${quote.price.toLocaleString()}</div>
+              </div>
+              <div className="detail-item">
+                <div className="detail-label">Items Included</div>
+                <div className="detail-value">{quote.items} items</div>
+              </div>
+              <div className="detail-item">
+                <div className="detail-label">Lead Time</div>
+                <div className="detail-value">{quote.lead}</div>
+              </div>
+              <div className="detail-item">
+                <div className="detail-label">Warranty</div>
+                <div className="detail-value">{quote.warranty}</div>
+              </div>
+            </div>
+
+            {quote.flags&&quote.flags.length>0&&(
+              <div className="detail-alert">
+                <div className="font-semibold mb-2">⚠ Flags</div>
+                {quote.flags.map((flag,i)=>(
+                  <div key={i} className="text-sm">• {flag.text}</div>
+                ))}
+              </div>
+            )}
+
+            <div className="detail-section">
+              <h3>Scope of Work</h3>
+              <p className="text-secondary">{quote.scope}</p>
+            </div>
+
+            <div className="detail-section">
+              <h3>Details</h3>
+              <p className="text-secondary">{quote.details}</p>
+            </div>
+          </div>
+          <div className="modal-footer">
+            <button className="btn btn-primary" onClick={onClose}>Close</button>
+          </div>
+        </div>
+      </div>
+    );
+
+    const ProjectDetailPage=({projectId,onNavigate,projects,updateProject})=>{
+      const[expandedCategories,setExpandedCategories]=useState({});
+      const[selectedQuotes,setSelectedQuotes]=useState({});
+      const[ignoredFlags,setIgnoredFlags]=useState({});
+      const[ignoredGaps,setIgnoredGaps]=useState({});
+      const[exportModal,setExportModal]=useState(false);
+      const[detailModal,setDetailModal]=useState(null);
+      const[toast,setToast]=useState(null);
+      const[exportOptions,setExportOptions]=useState({
+        summary:true,
+        selectedQuotes:true,
+        allQuotes:true,
+        gapsConflicts:true
+      });
+      
+      const project=projects.find(p=>p.id===projectId)||projects[0];
+      
+      const getCategoryStatus=(cat)=>{
+        if(cat.status==='missing')return'missing';
+        const selectedQuoteId=selectedQuotes[cat.id];
+        if(!selectedQuoteId)return cat.status;
+        
+        const selectedQuote=cat.quotes.find(q=>q.id===selectedQuoteId);
+        if(!selectedQuote)return cat.status;
+        
+        const hasActiveFlags=selectedQuote.flags&&selectedQuote.flags.length>0&&!ignoredFlags[`${cat.id}-${selectedQuoteId}`];
+        return hasActiveFlags?'conflict':'covered';
+      };
+
+      const calculateConflicts=useCallback(()=>{
+        let conflictCount=0;
+        Object.values(MOCK_CATEGORIES).flat().forEach(cat=>{
+          const status=getCategoryStatus(cat);
+          if(status==='conflict')conflictCount++;
+        });
+        return conflictCount;
+      },[selectedQuotes,ignoredFlags]);
+
+      const calculateGaps=useCallback(()=>{
+        let gapCount=0;
+        Object.values(MOCK_CATEGORIES).flat().forEach(cat=>{
+          if(cat.status==='missing'&&!ignoredGaps[cat.id])gapCount++;
+        });
+        return gapCount;
+      },[ignoredGaps]);
+
+      // Check if ALL categories are properly resolved (no unresolved conflicts or gaps)
+      const areAllResolved=useCallback(()=>{
+        return Object.values(MOCK_CATEGORIES).flat().every(cat=>{
+          const status=getCategoryStatus(cat);
+          // If still conflict status, not resolved
+          if(status==='conflict')return false;
+          // If missing and not ignored, not resolved
+          if(status==='missing'&&!ignoredGaps[cat.id])return false;
+          // Otherwise resolved (covered, partial, or ignored)
+          return true;
+        });
+      },[selectedQuotes,ignoredFlags,ignoredGaps]);
+
+      // compute local counts to render immediately and keep UI consistent
+      const localConflicts = calculateConflicts();
+      const localGaps = calculateGaps();
+      
+      const total=Object.values(MOCK_CATEGORIES).flat().reduce((s,c)=>{
+        const selectedQuoteId=selectedQuotes[c.id];
+        const selectedQuote=c.quotes?.find(q=>q.id===selectedQuoteId);
+        return s+(selectedQuote?.price||0);
+      },0);
+      
+      // Auto-advance workflow when conflicts are resolved
+      useEffect(()=>{
+        const conflicts = localConflicts;
+        const gaps = localGaps;
+
+        // Only advance if ALL categories are resolved, not just counting zeros
+        if(areAllResolved() && project.workflowStep===3){
+          updateProject(projectId,{
+            workflowStep:4,
+            status:'ready',
+            conflicts:0,
+            gaps:0
+          });
+          setToast('All conflicts resolved! Moving to export.');
+        }else{
+          // Update conflict/gap count in parent once computed
+          updateProject(projectId,{
+            conflicts:conflicts,
+            gaps:gaps
+          });
+        }
+      },[areAllResolved,projectId,project.workflowStep]);
+      
+      const handleExport=()=>{
+        const wb=XLSX.utils.book_new();
+        
+        if(exportOptions.summary){
+          const summaryData=[
+            ['BIMTEQ ARGUS - Bid Package Summary'],
+            [],
+            ['Project:',project.name],
+            ['Client:',project.client],
+            ['Location:',project.location],
+            ['Bid Date:',`${project.bidDate} @ ${project.bidTime}`],
+            ['Generated:',new Date().toLocaleDateString()],
+            [],
+            ['Coverage:',`${project.coverage}%`],
+            ['Missing Quotes:',localGaps],
+            ['Conflicts:',localConflicts],
+            ['Total Quote Count:',project.quoteCount],
+            [],
+            ['CATEGORY BREAKDOWN'],
+            ['Category','Status','Vendor','Price','Items']
+          ];
+          
+          Object.entries(MOCK_CATEGORIES).forEach(([type,cats])=>{
+            cats.forEach(cat=>{
+              const selectedQuoteId=selectedQuotes[cat.id];
+              const selectedQuote=cat.quotes?.find(q=>q.id===selectedQuoteId);
+              const status=getCategoryStatus(cat);
+              
+              summaryData.push([
+                cat.name,
+                status==='covered'?'✓ Covered':status==='conflict'?'⚠ Conflict':status==='missing'?'✗ Missing':'Partial',
+                selectedQuote?selectedQuote.vendor:'No Quote Selected',
+                selectedQuote?selectedQuote.price:'',
+                selectedQuote?selectedQuote.items:''
+              ]);
+            });
+          });
+          
+          summaryData.push([]);
+          summaryData.push(['TOTAL QUOTED','','','$'+total.toLocaleString(),'']);
+          
+          const ws=XLSX.utils.aoa_to_sheet(summaryData);
+          ws['!cols']=[{wch:40},{wch:15},{wch:30},{wch:15},{wch:10}];
+          XLSX.utils.book_append_sheet(wb,ws,'Summary');
+        }
+        
+        if(exportOptions.selectedQuotes){
+          const selectedData=[
+            ['SELECTED QUOTES'],
+            [],
+            ['Category','Vendor','Price','Items','Lead Time','Warranty','Details']
+          ];
+          
+          Object.entries(MOCK_CATEGORIES).forEach(([type,cats])=>{
+            cats.forEach(cat=>{
+              const selectedQuoteId=selectedQuotes[cat.id];
+              const selectedQuote=cat.quotes?.find(q=>q.id===selectedQuoteId);
+              
+              if(selectedQuote){
+                selectedData.push([
+                  cat.name,
+                  selectedQuote.vendor,
+                  selectedQuote.price,
+                  selectedQuote.items,
+                  selectedQuote.lead,
+                  selectedQuote.warranty,
+                  selectedQuote.details
+                ]);
+              }
+            });
+          });
+          
+          selectedData.push([]);
+          selectedData.push(['TOTAL','','$'+total.toLocaleString(),'','','','']);
+          
+          const ws=XLSX.utils.aoa_to_sheet(selectedData);
+          ws['!cols']=[{wch:40},{wch:30},{wch:15},{wch:10},{wch:20},{wch:30},{wch:50}];
+          XLSX.utils.book_append_sheet(wb,ws,'Selected Quotes');
+        }
+        
+        if(exportOptions.allQuotes){
+          const comparisonData=[
+            ['ALL QUOTES COMPARISON'],
+            [],
+            ['Category','Vendor','Price','Items','Lead Time','Flags','Details']
+          ];
+          
+          Object.entries(MOCK_CATEGORIES).forEach(([type,cats])=>{
+            cats.forEach(cat=>{
+              if(cat.quotes&&cat.quotes.length>0){
+                comparisonData.push([cat.name,'','','','','','']);
+                cat.quotes.forEach(quote=>{
+                  const flags=quote.flags&&quote.flags.length>0?quote.flags.map(f=>f.text).join('; '):'None';
+                  comparisonData.push([
+                    '',
+                    quote.vendor,
+                    quote.price,
+                    quote.items,
+                    quote.lead,
+                    flags,
+                    quote.details
+                  ]);
+                });
+                comparisonData.push([]);
+              }
+            });
+          });
+          
+          const ws=XLSX.utils.aoa_to_sheet(comparisonData);
+          ws['!cols']=[{wch:40},{wch:30},{wch:15},{wch:10},{wch:20},{wch:40},{wch:50}];
+          XLSX.utils.book_append_sheet(wb,ws,'All Quotes');
+        }
+        
+        if(exportOptions.gapsConflicts){
+          const issuesData=[
+            ['GAPS & CONFLICTS'],
+            [],
+            ['Type','Category','Issue','Action Required']
+          ];
+          
+          Object.entries(MOCK_CATEGORIES).forEach(([type,cats])=>{
+            cats.forEach(cat=>{
+              const status=getCategoryStatus(cat);
+              
+              if(status==='missing'){
+                issuesData.push([
+                  'MISSING QUOTE',
+                  cat.name,
+                  'No quotes received for this category',
+                  'Obtain quote before bid submission'
+                ]);
+              }
+              
+              if(status==='conflict'){
+                const selectedQuoteId=selectedQuotes[cat.id];
+                const selectedQuote=cat.quotes?.find(q=>q.id===selectedQuoteId);
+                
+                if(selectedQuote&&selectedQuote.flags&&selectedQuote.flags.length>0){
+                  selectedQuote.flags.forEach(flag=>{
+                    issuesData.push([
+                      'CONFLICT',
+                      cat.name,
+                      flag.text,
+                      'Review specification and confirm with vendor'
+                    ]);
+                  });
+                }
+              }
+              
+              if(cat.quotes){
+                cat.quotes.forEach(quote=>{
+                  if(quote.flags&&quote.flags.length>0&&quote.id!==selectedQuotes[cat.id]){
+                    quote.flags.forEach(flag=>{
+                      issuesData.push([
+                        'NOTE',
+                        `${cat.name} - ${quote.vendor}`,
+                        flag.text,
+                        'Consider when selecting quote'
+                      ]);
+                    });
+                  }
+                });
+              }
+            });
+          });
+          
+          if(issuesData.length===3){
+            issuesData.push(['No issues found','All categories have valid quotes selected','','']);
+          }
+          
+          const ws=XLSX.utils.aoa_to_sheet(issuesData);
+          ws['!cols']=[{wch:15},{wch:40},{wch:50},{wch:40}];
+          XLSX.utils.book_append_sheet(wb,ws,'Gaps & Conflicts');
+        }
+        
+        const filename=`${project.name.replace(/\s+/g,'_')}_Bid_Package.xlsx`;
+        XLSX.writeFile(wb,filename);
+        updateProject(projectId,{workflowStep:5,status:'exported'});
+        setExportModal(false);
+        setToast('Bid package exported successfully!');
+      };
+      
+      useEffect(()=>{
+        const autoExpand={};
+        Object.entries(MOCK_CATEGORIES).forEach(([type,cats])=>{
+          cats.forEach(cat=>{
+            if(cat.status==='conflict'||cat.status==='missing'){
+              autoExpand[cat.id]=true;
+            }
+            if(cat.quotes&&cat.quotes.length>0){
+              const selected=cat.quotes.find(q=>q.selected);
+              if(selected){
+                setSelectedQuotes(prev=>({...prev,[cat.id]:selected.id}));
+              }
+            }
+          });
+        });
+        setExpandedCategories(autoExpand);
+      },[projectId]);
+      
+      const toggleCategory=(catId)=>{
+        setExpandedCategories(prev=>({...prev,[catId]:!prev[catId]}));
+      };
+      
+      const selectQuote=(catId,quoteId)=>{
+        setSelectedQuotes(prev=>({...prev,[catId]:quoteId}));
+      };
+      
+      const ignoreFlag=(catId,quoteId)=>{
+        setIgnoredFlags(prev=>({...prev,[`${catId}-${quoteId}`]:true}));
+        setToast('Flag ignored - conflict resolved!');
+      };
+      
+      const ignoreGap=(catId)=>{
+        setIgnoredGaps(prev=>({...prev,[catId]:true}));
+        setToast('Missing quote marked as ignored!');
+      };
+      
+      const renderCategory=(cat,type)=>{
+        const isExpanded=expandedCategories[cat.id];
+        const status=getCategoryStatus(cat);
+        const selectedQuoteId=selectedQuotes[cat.id];
+        const selectedQuote=cat.quotes?.find(q=>q.id===selectedQuoteId);
+        
+        return(
+          <div key={cat.id}>
+            <div 
+              className={`category-row ${status==='conflict'?'conflict':''} ${status==='missing'?'missing':''} ${status==='covered'&&selectedQuoteId?'selected':''} ${isExpanded?'expanded':''}`}
+              onClick={()=>toggleCategory(cat.id)}
+            >
+              <div className="category-status"><CategoryIcon status={status}/></div>
+              <div className="category-info">
+                <div className="category-name">{cat.name}</div>
+                <div className="category-detail">{cat.detail}</div>
+              </div>
+              <div className="category-vendor">
+                {selectedQuote?selectedQuote.vendor:(cat.quotes&&cat.quotes.length>0?`${cat.quotes.length} quotes`:'No quotes')}
+              </div>
+              <div className="category-price">
+                {selectedQuote?`$${selectedQuote.price.toLocaleString()}`:'—'}
+              </div>
+              <div className="category-action">
+                {cat.quotes&&cat.quotes.length>0&&(isExpanded?'−':'+')}
+              </div>
+            </div>
+            
+            {isExpanded&&status==='missing'&&(
+              <div className="quotes-list">
+                <div style={{background:'rgba(239,68,68,0.1)',border:'1px solid var(--accent-red)',borderRadius:8,padding:12}}>
+                  <div className="text-sm mb-2" style={{color:'var(--accent-red)',fontWeight:600}}>✗ No Quote Available</div>
+                  <button 
+                    className="btn btn-secondary btn-xs"
+                    onClick={(e)=>{e.stopPropagation();ignoreGap(cat.id);}}
+                  >
+                    Ignore Flag
+                  </button>
+                </div>
+              </div>
+            )}
+            
+            {isExpanded&&cat.quotes&&cat.quotes.length>0&&(
+              <div className="quotes-list">
+                {cat.quotes.map(quote=>{
+                  const isSelected=selectedQuoteId===quote.id;
+                  const flagKey=`${cat.id}-${quote.id}`;
+                  const hasFlagsIgnored=ignoredFlags[flagKey];
+                  const showFlags=quote.flags&&quote.flags.length>0&&!hasFlagsIgnored;
+                  
+                  return(
+                    <div 
+                      key={quote.id}
+                      className={`quote-item ${isSelected?'selected':''} ${showFlags?'flagged':''}`}
+                      onClick={()=>selectQuote(cat.id,quote.id)}
+                    >
+                      <div className="quote-header">
+                        <div className="quote-vendor">{quote.vendor}</div>
+                        <div className="quote-price">${quote.price.toLocaleString()}</div>
+                      </div>
+                      <div className="quote-details">
+                        {quote.items} items • {quote.details}
+                      </div>
+                      {showFlags&&(
+                        <div className="quote-flag">
+                          <span>⚠</span>
+                          <span>{quote.flags[0].text}</span>
+                        </div>
+                      )}
+                      {isSelected&&(
+                        <div className="quote-actions">
+                          {showFlags&&(
+                            <button 
+                              className="btn btn-secondary btn-xs"
+                              onClick={(e)=>{e.stopPropagation();ignoreFlag(cat.id,quote.id)}}
+                            >
+                              Ignore Flag
+                            </button>
+                          )}
+                          <button 
+                            className="btn btn-ghost btn-xs"
+                            onClick={(e)=>{e.stopPropagation();setDetailModal(quote)}}
+                          >
+                            View Details
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        );
+      };
+      
+      return<>
+        <div className="page-header">
+          <div className="flex justify-between items-center">
+            <div>
+              <button className="btn btn-ghost btn-sm" style={{marginLeft:-12,marginBottom:8}} onClick={()=>onNavigate('projects')}>
+                ← Back to Projects
+              </button>
+              <h1 style={{fontSize:22,fontWeight:700}}>{project.name}</h1>
+              <p className="text-muted text-sm">{project.client} • {project.location} • Bid: {project.bidDate} @ {project.bidTime}</p>
+            </div>
+            <div className="flex gap-3">
+              <div style={{textAlign:'right',marginRight:16}}>
+                <div className="text-sm text-muted">Missing Quotes</div>
+                <div className="text-xl font-bold" style={{color:localGaps>0?'var(--accent-red)':'var(--accent-green)'}}>
+                  {localGaps}
+                </div>
+              </div>
+              <div style={{textAlign:'right',marginRight:16}}>
+                <div className="text-sm text-muted">Conflicts</div>
+                <div className="text-xl font-bold" style={{color:localConflicts>0?'var(--accent-yellow)':'var(--accent-green)'}}>
+                  {localConflicts}
+                </div>
+              </div>
+              <div style={{textAlign:'right',marginRight:16}}>
+                <div className="text-sm text-muted">Coverage</div>
+                <div className="text-xl font-bold" style={{color:project.coverage===100?'var(--accent-green)':'var(--accent-red)'}}>
+                  {project.coverage}%
+                </div>
+              </div>
+              <button className="btn btn-success" onClick={()=>setExportModal(true)}>
+                📥 Export
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div className="page-content">
+          <ProgressStepper currentStep={project.workflowStep}/>
+
+          {(localGaps>0||localConflicts>0)&&(
+            <div style={{background:'rgba(245,158,11,0.1)',border:'1px solid var(--accent-yellow)',borderRadius:12,padding:20,marginBottom:24}}>
+              <div className="font-semibold mb-2" style={{fontSize:16}}>⚠ Action Required</div>
+              <div className="text-sm">
+                {localGaps>0&&<div>• <strong>{localGaps}</strong> categories need quotes</div>}
+                {localConflicts>0&&<div>• <strong>{localConflicts}</strong> spec conflicts need review</div>}
+              </div>
+            </div>
+          )}
+          
+          <div className="category-section">
+            <div className="category-header">Subcontractors</div>
+            {MOCK_CATEGORIES.subcontractors.map(cat=>renderCategory(cat,'subcontractor'))}
+          </div>
+          
+          <div className="category-section">
+            <div className="category-header">Equipment</div>
+            {MOCK_CATEGORIES.equipment.map(cat=>renderCategory(cat,'equipment'))}
+          </div>
+          
+          <div className="category-section">
+            <div className="category-header">Materials</div>
+            {MOCK_CATEGORIES.materials.map(cat=>renderCategory(cat,'materials'))}
+          </div>
+          
+          <div style={{background:'var(--bg-card)',border:'1px solid var(--border)',borderRadius:10,padding:20,display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+            <div className="font-semibold">Total Quoted</div>
+            <div style={{fontSize:28,fontWeight:700}}>${total.toLocaleString()}</div>
+          </div>
+        </div>
+        
+        {detailModal&&<QuoteDetailModal quote={detailModal} onClose={()=>setDetailModal(null)}/>}
+        
+        {exportModal&&(
+          <div className="modal-overlay" onClick={()=>setExportModal(false)}>
+            <div className="modal" onClick={e=>e.stopPropagation()}>
+              <div className="modal-header">
+                <h2 style={{fontSize:20,fontWeight:600}}>Export Bid Package</h2>
+                <button className="modal-close" onClick={()=>setExportModal(false)}>×</button>
+              </div>
+              <div className="modal-body">
+                <div style={{marginBottom:20}}>
+                  <div className="text-sm text-muted mb-2">Export as single Excel workbook with multiple tabs:</div>
+                  <div style={{background:'var(--bg-secondary)',padding:12,borderRadius:8,fontSize:13}}>
+                    <strong>{project.name.replace(/\s+/g,'_')}_Bid_Package.xlsx</strong>
+                    <div className="text-muted text-sm mt-1">Ready to copy into your bid form template</div>
+                  </div>
+                </div>
+                
+                <p className="text-muted mb-3" style={{fontSize:13}}>Select tabs to include:</p>
+                
+                <div className="export-option">
+                  <input 
+                    type="checkbox" 
+                    checked={exportOptions.summary}
+                    onChange={(e)=>setExportOptions({...exportOptions,summary:e.target.checked})}
+                  />
+                  <div>
+                    <strong>Summary</strong>
+                    <div className="text-sm text-muted">Totals by category, coverage %, gaps & conflicts</div>
+                  </div>
+                </div>
+                
+                <div className="export-option">
+                  <input 
+                    type="checkbox" 
+                    checked={exportOptions.selectedQuotes}
+                    onChange={(e)=>setExportOptions({...exportOptions,selectedQuotes:e.target.checked})}
+                  />
+                  <div>
+                    <strong>Selected Quotes</strong>
+                    <div className="text-sm text-muted">Your chosen quotes with all details</div>
+                  </div>
+                </div>
+                
+                <div className="export-option">
+                  <input 
+                    type="checkbox" 
+                    checked={exportOptions.allQuotes}
+                    onChange={(e)=>setExportOptions({...exportOptions,allQuotes:e.target.checked})}
+                  />
+                  <div>
+                    <strong>All Quotes Comparison</strong>
+                    <div className="text-sm text-muted">Side-by-side comparison of all quotes</div>
+                  </div>
+                </div>
+                
+                <div className="export-option">
+                  <input 
+                    type="checkbox" 
+                    checked={exportOptions.gapsConflicts}
+                    onChange={(e)=>setExportOptions({...exportOptions,gapsConflicts:e.target.checked})}
+                  />
+                  <div>
+                    <strong>Gaps & Conflicts</strong>
+                    <div className="text-sm text-muted">Items needing review before bid submission</div>
+                  </div>
+                </div>
+                
+                {(localGaps>0||localConflicts>0)&&(
+                  <div style={{background:'rgba(245,158,11,0.1)',border:'1px solid var(--accent-yellow)',borderRadius:10,padding:16,marginTop:20}}>
+                    <div className="font-semibold mb-2">⚠ Incomplete Bid Package</div>
+                    <div className="text-sm">
+                      {localGaps>0&&<div>• {localGaps} missing {localGaps===1?'quote':'quotes'}</div>}
+                      {localConflicts>0&&<div>• {localConflicts} unresolved {localConflicts===1?'conflict':'conflicts'}</div>}
+                    </div>
+                  </div>
+                )}
+              </div>
+              <div className="modal-footer">
+                <button className="btn btn-secondary" onClick={()=>setExportModal(false)}>Cancel</button>
+                <button className="btn btn-primary" onClick={handleExport}>📥 Export Excel Package</button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {toast&&<Toast message={toast} onClose={()=>setToast(null)}/>}
+        
+        <div className="page-footer">
+          Powered by <a href="https://symplii.ai" target="_blank" rel="noopener">Symplii.ai</a>
+        </div>
+      </>;
+    };
+
+    const App=()=>{
+      const[loggedIn,setLoggedIn]=useState(false);
+      const[page,setPage]=useState('projects');
+      const[projectId,setProjectId]=useState(null);
+      const[showNew,setShowNew]=useState(false);
+      const[processing,setProcessing]=useState(null);
+      const[projects,setProjects]=useState(INITIAL_PROJECTS);
+      
+      const updateProjectData=(projId,updates)=>{
+        setProjects(prev=>prev.map(p=>
+          p.id===projId?{...p,...updates}:p
+        ));
+      };
+      
+      const nav=(p,id=null)=>{
+        if(p==='new-project'){
+          setShowNew(true);
+        }else{
+          setPage(p);
+          setProjectId(id);
+          if(p==='project-detail'&&id){
+            updateProjectData(id,{workflowStep:Math.max(2,projects.find(pr=>pr.id===id)?.workflowStep||2)});
+          }
+        }
+      };
+      
+      const startAnalysis=(formData)=>{
+        setShowNew(false);
+        setProcessing(formData.name);
+        setTimeout(()=>{
+          const newProject={
+            id:formData.name.toLowerCase().replace(/\s+/g,'-'),
+            name:formData.name,
+            client:formData.client,
+            location:formData.location,
+            bidDate:formData.bidDate,
+            bidTime:formData.bidTime,
+            coverage:92,
+            gaps:1,
+            conflicts:2,
+            flags:['Spec mismatch','Lead time concern'],
+            quoteCount:15,
+            status:'needs-review',
+            created:new Date().toISOString(),
+            workflowStep:1
+          };
+          setProjects(prev=>[newProject,...prev]);
+          setProcessing(null);
+          setPage('project-detail');
+          setProjectId(newProject.id);
+        },12000);
+      };
+      
+      const handleLogout=()=>{
+        setLoggedIn(false);
+        setProjects(INITIAL_PROJECTS);
+      };
+      
+      if(!loggedIn)return<LoginPage onLogin={()=>setLoggedIn(true)}/>;
+      
+      return(
+        <div className="app-container">
+          <Sidebar currentPage={page} onNavigate={nav} onLogout={handleLogout}/>
+          <main className="main-content">
+            {page==='projects'&&<ProjectsPage onNavigate={nav} processingProject={processing} projects={projects}/>}
+            {page==='project-detail'&&<ProjectDetailPage projectId={projectId} onNavigate={nav} projects={projects} updateProject={updateProjectData}/>}
+          </main>
+          {showNew&&<NewProjectModal onClose={()=>setShowNew(false)} onStart={startAnalysis}/>}
+        </div>
+      );
+    };
+
+    ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+  </script>
+</body>
+</html>
