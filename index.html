@@ -1605,13 +1605,17 @@
     };
 
     const NewProjectModal=({onClose,onStart})=>{
+      const getTodayDate=()=>{
+        const today=new Date();
+        return today.toISOString().split('T')[0];
+      };
       const[uploaded,setUploaded]=useState(false);
       const[files,setFiles]=useState(null);
       const[formData,setFormData]=useState({
         name:'',
         client:'',
         location:'',
-        bidDate:'',
+        bidDate:getTodayDate(),
         bidTime:''
       });
       
@@ -1622,7 +1626,7 @@
           name: prev.name || 'Municipal Convention Center',
           client: prev.client || 'City of San Antonio',
           location: prev.location || 'San Antonio, TX',
-          bidDate: prev.bidDate || '2023-09-15',
+          bidDate: prev.bidDate || getTodayDate(),
           bidTime: prev.bidTime || '14:00'
         }));
         setFiles({
@@ -2424,12 +2428,12 @@
             bidTime:formData.bidTime,
             coverage:92,
             gaps:1,
-            conflicts:2,
-            flags:['Spec mismatch','Lead time concern'],
-            quoteCount:15,
+            conflicts:1,
+            flags:['Spec mismatch on RTU','Missing Grilles quotes'],
+            quoteCount:12,
             status:'needs-review',
             created:new Date().toISOString(),
-            workflowStep:1
+            workflowStep:3
           };
           setProjects(prev=>[newProject,...prev]);
           setProcessing(null);
