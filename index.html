@@ -103,8 +103,8 @@
     }
     
     .login-logo-img{
-      width:128px;
-      height:128px;
+      width:170px;
+      height:170px;
       margin-bottom:2px;
     }
     
@@ -1153,6 +1153,221 @@
         opacity:1;
       }
     }
+
+    /* Comparison Modal Styles */
+    .comparison-container{
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
+      gap:16px;
+      max-height:calc(85vh - 120px);
+      overflow-y:auto;
+      padding:4px;
+    }
+
+    .comparison-quote-card{
+      background:var(--bg-card);
+      border:1px solid var(--border);
+      border-radius:14px;
+      overflow:hidden;
+      transition:all 0.3s cubic-bezier(0.4,0,0.2,1);
+      display:flex;
+      flex-direction:column;
+      position:relative;
+    }
+
+    .comparison-quote-card:hover{
+      border-color:var(--accent-blue);
+      box-shadow:0 12px 32px rgba(59,130,246,0.15);
+      transform:translateY(-2px);
+    }
+
+    .comparison-quote-header{
+      background:linear-gradient(135deg,var(--bg-elevated) 0%,rgba(59,130,246,0.05) 100%);
+      padding:18px;
+      border-bottom:1px solid var(--border);
+      position:relative;
+    }
+
+    .comparison-vendor-name{
+      font-size:15px;
+      font-weight:700;
+      color:var(--text-primary);
+      margin-bottom:10px;
+      letter-spacing:-0.3px;
+    }
+
+    .comparison-price{
+      font-size:28px;
+      font-weight:800;
+      background:var(--gradient-green);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:6px;
+    }
+
+    .comparison-details{
+      font-size:12px;
+      color:var(--text-muted);
+      line-height:1.4;
+      display:flex;
+      gap:8px;
+    }
+
+    .comparison-body{
+      padding:18px;
+      flex:1;
+      overflow-y:auto;
+      display:flex;
+      flex-direction:column;
+      gap:12px;
+    }
+
+    .comparison-section{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+
+    .comparison-section-title{
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:0.6px;
+      font-weight:700;
+      color:var(--accent-blue);
+      opacity:0.8;
+    }
+
+    .comparison-item{
+      display:flex;
+      justify-content:space-between;
+      padding:6px 0;
+      font-size:12px;
+      color:var(--text-secondary);
+    }
+
+    .comparison-item-label{
+      color:var(--text-muted);
+      font-weight:500;
+      flex:0 0 45%;
+    }
+
+    .comparison-item-value{
+      font-weight:600;
+      color:var(--text-primary);
+      text-align:right;
+      flex:1;
+    }
+
+    .comparison-flags{
+      background:rgba(245,158,11,0.08);
+      border-left:3px solid var(--accent-yellow);
+      padding:10px 12px;
+      border-radius:8px;
+      margin:0;
+    }
+
+    .comparison-flag-title{
+      font-size:11px;
+      font-weight:700;
+      color:var(--accent-yellow);
+      margin-bottom:6px;
+      text-transform:uppercase;
+      letter-spacing:0.5px;
+    }
+
+    .comparison-flag-item{
+      font-size:11px;
+      color:var(--text-secondary);
+      display:flex;
+      align-items:flex-start;
+      gap:6px;
+      margin-bottom:4px;
+      line-height:1.4;
+    }
+
+    .comparison-flag-item:last-child{
+      margin-bottom:0;
+    }
+
+    .comparison-line-items{
+      background:var(--bg-secondary);
+      border-radius:8px;
+      padding:10px;
+      font-size:11px;
+      border:1px solid var(--border);
+    }
+
+    .comparison-line-item-row{
+      display:flex;
+      justify-content:space-between;
+      padding:6px 0;
+      border-bottom:1px solid rgba(45,58,82,0.3);
+      align-items:center;
+    }
+
+    .comparison-line-item-row:last-child{
+      border-bottom:none;
+    }
+
+    .comparison-line-item-name{
+      color:var(--text-secondary);
+      flex:1;
+    }
+
+    .comparison-line-item-qty{
+      color:var(--text-secondary);
+      text-align:center;
+      min-width:50px;
+      font-size:11px;
+      font-weight:500;
+    }
+
+    .comparison-line-item-price{
+      color:var(--text-primary);
+      font-weight:600;
+      text-align:right;
+      min-width:70px;
+    }
+
+    .comparison-footer{
+      padding:14px 18px;
+      border-top:1px solid var(--border);
+      background:var(--bg-elevated);
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    .comparison-total{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      font-weight:700;
+      font-size:14px;
+      color:var(--text-primary);
+    }
+
+    .comparison-total-price{
+      color:var(--accent-green);
+      font-size:16px;
+    }
+
+    .comparison-select-btn{
+      width:100%;
+      padding:10px 14px !important;
+      font-size:13px !important;
+    }
+
+    .compare-quotes-btn{
+      padding:8px 14px !important;
+      font-size:12px !important;
+      gap:6px;
+      white-space:nowrap;
+    }
+
+    .compare-quotes-btn:hover{
+      transform:translateY(-1px);
+    }
   </style>
 </head>
 <body>
@@ -1175,9 +1390,9 @@
           detail:'DDC controls, sensors, integration',
           status:'covered',
           quotes:[
-            {id:'q1',vendor:'Vector Building Controls',price:28500,selected:true,items:15,details:'Complete DDC system with web-based interface',flags:[],scope:'Full building automation system including all sensors, controllers, and software licenses',lead:'8-10 weeks',warranty:'2 years parts and labor'},
-            {id:'q2',vendor:'Integrated Control Solutions',price:31200,selected:false,items:15,details:'Enterprise-grade system with mobile app',flags:[],scope:'Premium system with advanced analytics and mobile control',lead:'10-12 weeks',warranty:'3 years parts, 1 year labor'},
-            {id:'q3',vendor:'CoreTech Building Controls',price:26800,selected:false,items:14,details:'Standard system, basic reporting',flags:[],scope:'Basic DDC system with standard reporting',lead:'6-8 weeks',warranty:'1 year parts and labor'},
+            {id:'q1',vendor:'Vector Building Controls',price:28500,selected:true,items:12,details:'Complete DDC system with web-based interface',flags:[],scope:'Full building automation system including all sensors, controllers, and software licenses',lead:'8-10 weeks',warranty:'2 years parts and labor',lineItems:[{name:'DDC Controller (16 zones)',qty:1,unit:'EA',unitPrice:8500,total:8500},{name:'Temperature Sensors (32x)',qty:32,unit:'EA',unitPrice:150,total:4800},{name:'Pressure Transducers (8x)',qty:8,unit:'EA',unitPrice:275,total:2200},{name:'Damper Actuators (24V-90)',qty:12,unit:'EA',unitPrice:650,total:7800},{name:'Software License (5-year)',qty:1,unit:'EA',unitPrice:3200,total:3200},{name:'Installation & Startup (40 hrs)',qty:1,unit:'LS',unitPrice:2000,total:2000},{name:'Humidity Sensors (16x RH)',qty:16,unit:'EA',unitPrice:120,total:1920},{name:'CO2 Sensors (12x 0-2000ppm)',qty:12,unit:'EA',unitPrice:280,total:3360},{name:'VAV Box Controllers (8x)',qty:8,unit:'EA',unitPrice:750,total:6000},{name:'Network Switches & Control Wiring (1200 ft)',qty:1,unit:'LS',unitPrice:2500,total:2500},{name:'Training & Documentation',qty:1,unit:'LS',unitPrice:1200,total:1200},{name:'System Commissioning (3 visits)',qty:1,unit:'LS',unitPrice:1500,total:1500}]},
+            {id:'q2',vendor:'Integrated Control Solutions',price:29100,selected:false,items:12,details:'Complete DDC system with advanced controls',flags:[],scope:'Full building automation system with analytics',lead:'8-10 weeks',warranty:'2 years parts and labor',lineItems:[{name:'DDC Controller (16 zones)',qty:1,unit:'EA',unitPrice:8700,total:8700},{name:'Temperature Sensors (32x)',qty:32,unit:'EA',unitPrice:155,total:4960},{name:'Pressure Transducers (8x)',qty:8,unit:'EA',unitPrice:285,total:2280},{name:'Damper Actuators (24V-90)',qty:12,unit:'EA',unitPrice:670,total:8040},{name:'Software License (5-year)',qty:1,unit:'EA',unitPrice:3200,total:3200},{name:'Installation & Startup (40 hrs)',qty:1,unit:'LS',unitPrice:1920,total:1920},{name:'Humidity Sensors (16x RH)',qty:16,unit:'EA',unitPrice:125,total:2000},{name:'CO2 Sensors (12x 0-2000ppm)',qty:12,unit:'EA',unitPrice:290,total:3480},{name:'VAV Box Controllers (8x)',qty:8,unit:'EA',unitPrice:780,total:6240},{name:'Network Switches & Control Wiring (1200 ft)',qty:1,unit:'LS',unitPrice:2600,total:2600},{name:'Training & Documentation',qty:1,unit:'LS',unitPrice:1300,total:1300},{name:'System Commissioning (3 visits)',qty:1,unit:'LS',unitPrice:1580,total:1580}]},
+            {id:'q3',vendor:'CoreTech Building Controls',price:27800,selected:false,items:12,details:'Complete DDC system, standard controls',flags:[],scope:'Full building automation system',lead:'8-10 weeks',warranty:'2 years parts and labor',lineItems:[{name:'DDC Controller (16 zones)',qty:1,unit:'EA',unitPrice:8200,total:8200},{name:'Temperature Sensors (32x)',qty:32,unit:'EA',unitPrice:145,total:4640},{name:'Pressure Transducers (8x)',qty:8,unit:'EA',unitPrice:265,total:2120},{name:'Damper Actuators (24V-90)',qty:12,unit:'EA',unitPrice:630,total:7560},{name:'Software License (5-year)',qty:1,unit:'EA',unitPrice:3200,total:3200},{name:'Installation & Startup (40 hrs)',qty:1,unit:'LS',unitPrice:2080,total:2080},{name:'Humidity Sensors (16x RH)',qty:16,unit:'EA',unitPrice:115,total:1840},{name:'CO2 Sensors (12x 0-2000ppm)',qty:12,unit:'EA',unitPrice:275,total:3300},{name:'VAV Box Controllers (8x)',qty:8,unit:'EA',unitPrice:720,total:5760},{name:'Network Switches & Control Wiring (1200 ft)',qty:1,unit:'LS',unitPrice:2400,total:2400},{name:'Training & Documentation',qty:1,unit:'LS',unitPrice:1150,total:1150},{name:'System Commissioning (3 visits)',qty:1,unit:'LS',unitPrice:1450,total:1450}]},
           ]
         },
         {
@@ -1186,8 +1401,8 @@
           detail:'Air and hydronic balancing, commissioning',
           status:'covered',
           quotes:[
-            {id:'q1',vendor:'Balanced Air Solutions',price:18900,selected:true,items:1,details:'Complete TAB with NEBB certification',flags:[],scope:'Full air and hydronic TAB, commissioning, and documentation',lead:'Schedule after substantial completion',warranty:'Re-balance included if issues found within 90 days'},
-            {id:'q2',vendor:'Premier TAB Services',price:17500,selected:false,items:1,details:'Standard TAB service',flags:[],scope:'Standard TAB service with basic reporting',lead:'Schedule after substantial completion',warranty:'Does not include re-balance'},
+            {id:'q1',vendor:'Balanced Air Solutions',price:18900,selected:true,items:9,details:'Complete TAB with NEBB certification',flags:[],scope:'Full air and hydronic TAB, commissioning, and documentation',lead:'Schedule after substantial completion',warranty:'Re-balance included if issues found within 90 days',lineItems:[{name:'Air Balancing Service',qty:1,unit:'LS',unitPrice:8500,total:8500},{name:'Hydronic Balancing Service',qty:1,unit:'LS',unitPrice:6800,total:6800},{name:'NEBB Certification',qty:1,unit:'LS',unitPrice:2400,total:2400},{name:'Final Documentation',qty:1,unit:'LS',unitPrice:1200,total:1200},{name:'Ductwork Pressure Testing',qty:1,unit:'LS',unitPrice:1500,total:1500},{name:'Pitot Tube Traverse Testing',qty:24,unit:'EA',unitPrice:85,total:2040},{name:'Balancing Valve Installation',qty:8,unit:'EA',unitPrice:150,total:1200},{name:'Re-commissioning Visit',qty:2,unit:'EA',unitPrice:500,total:1000},{name:'System Report & Adjustments',qty:1,unit:'LS',unitPrice:1760,total:1760}]},
+            {id:'q2',vendor:'Premier TAB Services',price:18300,selected:false,items:9,details:'Complete TAB with NEBB certification',flags:[],scope:'Full air and hydronic TAB with documentation',lead:'Schedule after substantial completion',warranty:'Re-balance included if issues found within 90 days',lineItems:[{name:'Air Balancing Service',qty:1,unit:'LS',unitPrice:8800,total:8800},{name:'Hydronic Balancing Service',qty:1,unit:'LS',unitPrice:6600,total:6600},{name:'NEBB Certification',qty:1,unit:'LS',unitPrice:2300,total:2300},{name:'Final Documentation',qty:1,unit:'LS',unitPrice:600,total:600},{name:'Ductwork Pressure Testing',qty:1,unit:'LS',unitPrice:1450,total:1450},{name:'Pitot Tube Traverse Testing',qty:24,unit:'EA',unitPrice:82,total:1968},{name:'Balancing Valve Installation',qty:8,unit:'EA',unitPrice:145,total:1160},{name:'Re-commissioning Visit',qty:2,unit:'EA',unitPrice:480,total:960},{name:'System Report & Adjustments',qty:1,unit:'LS',unitPrice:1632,total:1632}]},
           ]
         }
       ],
@@ -1198,11 +1413,11 @@
           detail:'RTU-1 through RTU-4 (5-ton units)',
           status:'conflict',
           quotes:[
-            {id:'q1',vendor:'Trane',price:24800,selected:true,items:4,details:'Precedent series, 16 SEER',flags:[{type:'spec',text:'Quoted 14 SEER, spec calls for 16 SEER'}],scope:'4x 5-ton rooftop units, economizers included',lead:'8-10 weeks',warranty:'5 years compressor, 1 year parts'},
-            {id:'q2',vendor:'Carrier',price:26400,selected:false,items:4,details:'WeatherMaster series, 16 SEER',flags:[],scope:'4x 5-ton rooftop units with advanced controls',lead:'8-10 weeks',warranty:'5 years compressor, 1 year parts'},
-            {id:'q3',vendor:'Daikin',price:25200,selected:false,items:4,details:'Rebel series, 17 SEER',flags:[],scope:'4x 5-ton units, exceeds efficiency requirements',lead:'6-8 weeks',warranty:'7 years compressor, 2 years parts'},
-            {id:'q4',vendor:'York',price:23900,selected:false,items:4,details:'Predator series, 15 SEER',flags:[],scope:'4x 5-ton rooftop units, standard efficiency',lead:'6-8 weeks',warranty:'5 years compressor, 1 year parts'},
-            {id:'q5',vendor:'McQuay',price:27100,selected:false,items:4,details:'Vision series, 16 SEER',flags:[],scope:'4x 5-ton premium units with enhanced warranty',lead:'12-14 weeks',warranty:'10 years compressor, 2 years parts'},
+            {id:'q1',vendor:'Trane',price:24800,selected:true,items:8,details:'Precedent series, 14 SEER (does not meet spec)',flags:[{type:'spec',text:'Quoted 14 SEER, spec calls for 16 SEER'}],scope:'4x 5-ton rooftop units, economizers included',lead:'8-10 weeks',warranty:'5 years compressor, 1 year parts',lineItems:[{name:'Precedent RTU - 5 Ton (14 SEER)',qty:4,unit:'EA',unitPrice:4800,total:19200},{name:'Economizers (Dry-bulb)',qty:4,unit:'EA',unitPrice:450,total:1800},{name:'Freight & Delivery',qty:1,unit:'LS',unitPrice:2000,total:2000},{name:'Vibration Isolation Pads (4x4)',qty:4,unit:'EA',unitPrice:125,total:500},{name:'Roof Curbs & Flashing (32x32)',qty:4,unit:'EA',unitPrice:200,total:800},{name:'Electrical Disconnect Switches (60A)',qty:4,unit:'EA',unitPrice:150,total:600},{name:'Startup & Commissioning (8 hrs)',qty:1,unit:'LS',unitPrice:1200,total:1200},{name:'Equipment Manuals & Support',qty:1,unit:'LS',unitPrice:500,total:500}]},
+            {id:'q2',vendor:'Carrier',price:26400,selected:false,items:8,details:'WeatherMaster series, 16 SEER',flags:[],scope:'4x 5-ton rooftop units with advanced controls',lead:'8-10 weeks',warranty:'5 years compressor, 1 year parts',lineItems:[{name:'WeatherMaster RTU - 5 Ton (16 SEER)',qty:4,unit:'EA',unitPrice:5800,total:23200},{name:'Advanced Control Module (DDC)',qty:4,unit:'EA',unitPrice:600,total:2400},{name:'Freight & Delivery',qty:1,unit:'LS',unitPrice:800,total:800},{name:'Vibration Isolation Pads (4x4)',qty:4,unit:'EA',unitPrice:130,total:520},{name:'Roof Curbs & Flashing (32x32)',qty:4,unit:'EA',unitPrice:210,total:840},{name:'Electrical Disconnect Switches (60A)',qty:4,unit:'EA',unitPrice:155,total:620},{name:'Startup & Commissioning (8 hrs)',qty:1,unit:'LS',unitPrice:1250,total:1250},{name:'Equipment Manuals & Support',qty:1,unit:'LS',unitPrice:520,total:520}]},
+            {id:'q3',vendor:'Daikin',price:25200,selected:false,items:8,details:'Rebel series, 17 SEER',flags:[],scope:'4x 5-ton units, exceeds efficiency requirements',lead:'6-8 weeks',warranty:'7 years compressor, 2 years parts',lineItems:[{name:'Rebel RTU - 5 Ton (17 SEER)',qty:4,unit:'EA',unitPrice:5600,total:22400},{name:'Premium Economizer (Enthalpy)',qty:4,unit:'EA',unitPrice:550,total:2200},{name:'Freight & Delivery',qty:1,unit:'LS',unitPrice:600,total:600},{name:'Vibration Isolation Pads (4x4)',qty:4,unit:'EA',unitPrice:128,total:512},{name:'Roof Curbs & Flashing (32x32)',qty:4,unit:'EA',unitPrice:205,total:820},{name:'Electrical Disconnect Switches (60A)',qty:4,unit:'EA',unitPrice:152,total:608},{name:'Startup & Commissioning (8 hrs)',qty:1,unit:'LS',unitPrice:1200,total:1200},{name:'Equipment Manuals & Support',qty:1,unit:'LS',unitPrice:510,total:510}]},
+            {id:'q4',vendor:'York',price:23900,selected:false,items:8,details:'Predator series, 15 SEER',flags:[],scope:'4x 5-ton rooftop units, standard efficiency',lead:'6-8 weeks',warranty:'5 years compressor, 1 year parts',lineItems:[{name:'Predator RTU - 5 Ton (15 SEER)',qty:4,unit:'EA',unitPrice:5300,total:21200},{name:'Standard Economizer (Dry-bulb)',qty:4,unit:'EA',unitPrice:400,total:1600},{name:'Freight & Delivery',qty:1,unit:'LS',unitPrice:1100,total:1100},{name:'Vibration Isolation Pads (4x4)',qty:4,unit:'EA',unitPrice:120,total:480},{name:'Roof Curbs & Flashing (32x32)',qty:4,unit:'EA',unitPrice:195,total:780},{name:'Electrical Disconnect Switches (60A)',qty:4,unit:'EA',unitPrice:145,total:580},{name:'Startup & Commissioning (8 hrs)',qty:1,unit:'LS',unitPrice:1150,total:1150},{name:'Equipment Manuals & Support',qty:1,unit:'LS',unitPrice:490,total:490}]},
+            {id:'q5',vendor:'McQuay',price:27100,selected:false,items:8,details:'Vision series, 16 SEER',flags:[],scope:'4x 5-ton premium units with enhanced warranty',lead:'12-14 weeks',warranty:'10 years compressor, 2 years parts',lineItems:[{name:'Vision RTU - 5 Ton Premium (16 SEER)',qty:4,unit:'EA',unitPrice:6000,total:24000},{name:'Premium Economizer & Controls (DDC)',qty:4,unit:'EA',unitPrice:650,total:2600},{name:'Freight & Delivery',qty:1,unit:'LS',unitPrice:500,total:500},{name:'Vibration Isolation Pads (4x4)',qty:4,unit:'EA',unitPrice:135,total:540},{name:'Roof Curbs & Flashing (32x32)',qty:4,unit:'EA',unitPrice:215,total:860},{name:'Electrical Disconnect Switches (60A)',qty:4,unit:'EA',unitPrice:160,total:640},{name:'Startup & Commissioning (8 hrs)',qty:1,unit:'LS',unitPrice:1300,total:1300},{name:'Equipment Manuals & Support',qty:1,unit:'LS',unitPrice:530,total:530}]},
           ]
         },
         {
@@ -1218,8 +1433,8 @@
           detail:'EF-1 through EF-6 (various CFM)',
           status:'covered',
           quotes:[
-            {id:'q1',vendor:'Price Industries',price:4850,selected:true,items:6,details:'Wall-mounted, direct drive',flags:[],scope:'6 exhaust fans ranging from 500-1200 CFM',lead:'4-6 weeks',warranty:'1 year parts'},
-            {id:'q2',vendor:'Titus',price:5100,selected:false,items:6,details:'Ceiling-mounted option available',flags:[],scope:'6 exhaust fans with flexible mounting options',lead:'6-8 weeks',warranty:'1 year parts'},
+            {id:'q1',vendor:'Price Industries',price:4850,selected:true,items:10,details:'Wall-mounted, direct drive',flags:[],scope:'6 exhaust fans ranging from 500-1200 CFM',lead:'4-6 weeks',warranty:'1 year parts',lineItems:[{name:'Exhaust Fan - 500 CFM (Wall)',qty:2,unit:'EA',unitPrice:450,total:900},{name:'Exhaust Fan - 750 CFM (Wall)',qty:2,unit:'EA',unitPrice:580,total:1160},{name:'Exhaust Fan - 1200 CFM (Wall)',qty:2,unit:'EA',unitPrice:950,total:1900},{name:'Wall Dampers (Spring)',qty:6,unit:'EA',unitPrice:155,total:930},{name:'Installation Hardware',qty:1,unit:'LS',unitPrice:960,total:960},{name:'Ductwork Connections (6" and 8")',qty:6,unit:'LF',unitPrice:65,total:390},{name:'Vibration Damper Supports',qty:6,unit:'EA',unitPrice:85,total:510},{name:'Filter Frames (Disposable)',qty:2,unit:'EA',unitPrice:45,total:90},{name:'Speed Controllers (Potentiometer)',qty:3,unit:'EA',unitPrice:120,total:360},{name:'Sealing & Insulation (1" wrap)',qty:1,unit:'LS',unitPrice:600,total:600}]},
+            {id:'q2',vendor:'Titus',price:5100,selected:false,items:10,details:'Ceiling-mounted option available',flags:[],scope:'6 exhaust fans with flexible mounting options',lead:'6-8 weeks',warranty:'1 year parts',lineItems:[{name:'Exhaust Fan - 500 CFM (Ceiling)',qty:2,unit:'EA',unitPrice:520,total:1040},{name:'Exhaust Fan - 750 CFM (Ceiling)',qty:2,unit:'EA',unitPrice:650,total:1300},{name:'Exhaust Fan - 1200 CFM (Ceiling)',qty:2,unit:'EA',unitPrice:1050,total:2100},{name:'Ceiling Dampers (Motorized)',qty:6,unit:'EA',unitPrice:200,total:1200},{name:'Installation Accessories',qty:1,unit:'LS',unitPrice:540,total:540},{name:'Ductwork Connections (6" and 8")',qty:6,unit:'LF',unitPrice:70,total:420},{name:'Vibration Damper Supports',qty:6,unit:'EA',unitPrice:90,total:540},{name:'Filter Frames (Disposable)',qty:2,unit:'EA',unitPrice:50,total:100},{name:'Speed Controllers (3-speed)',qty:3,unit:'EA',unitPrice:125,total:375},{name:'Sealing & Insulation (1" wrap)',qty:1,unit:'LS',unitPrice:620,total:620}]},
           ]
         },
       ],
@@ -1230,8 +1445,8 @@
           detail:'Galvanized steel, various sizes',
           status:'covered',
           quotes:[
-            {id:'q1',vendor:'Precision Ductwork',price:18250,selected:true,items:145,details:'26ga galvanized, TDC/TDF construction',flags:[],scope:'Complete rectangular ductwork system per plans',lead:'Fabricate to schedule',warranty:'Workmanship warranty'},
-            {id:'q2',vendor:'Gulf Coast Sheet Metal',price:19800,selected:false,items:145,details:'24ga galvanized, reinforced',flags:[],scope:'Premium gauge ductwork with reinforcement',lead:'Fabricate to schedule',warranty:'Workmanship warranty'},
+            {id:'q1',vendor:'Precision Ductwork',price:18250,selected:true,items:10,details:'26ga galvanized, TDC/TDF construction',flags:[],scope:'Complete rectangular ductwork system per plans',lead:'Fabricate to schedule',warranty:'Workmanship warranty',lineItems:[{name:'Main Trunk Duct (48x24)',qty:320,unit:'LF',unitPrice:12,total:3840},{name:'Branch Ducts (30x18)',qty:480,unit:'LF',unitPrice:8,total:3840},{name:'Turning Vanes',qty:45,unit:'EA',unitPrice:85,total:3825},{name:'Duct Sealer & Tape',qty:1,unit:'LS',unitPrice:850,total:850},{name:'Labor & Fabrication',qty:1,unit:'LS',unitPrice:5895,total:5895},{name:'Access Doors (12x12)',qty:12,unit:'EA',unitPrice:125,total:1500},{name:'Balancing Dampers',qty:16,unit:'EA',unitPrice:95,total:1520},{name:'Fire Dampers',qty:8,unit:'EA',unitPrice:200,total:1600},{name:'Duct Insulation',qty:800,unit:'LF',unitPrice:2.5,total:2000},{name:'Support Hangers & Straps',qty:1,unit:'LS',unitPrice:950,total:950}]},
+            {id:'q2',vendor:'Gulf Coast Sheet Metal',price:18600,selected:false,items:10,details:'26ga galvanized, standard construction',flags:[],scope:'Complete rectangular ductwork system per plans',lead:'Fabricate to schedule',warranty:'Workmanship warranty',lineItems:[{name:'Main Trunk Duct (48x24)',qty:320,unit:'LF',unitPrice:12.2,total:3904},{name:'Branch Ducts (30x18)',qty:480,unit:'LF',unitPrice:8.1,total:3888},{name:'Turning Vanes',qty:45,unit:'EA',unitPrice:86,total:3870},{name:'Duct Sealer & Tape',qty:1,unit:'LS',unitPrice:880,total:880},{name:'Labor & Fabrication',qty:1,unit:'LS',unitPrice:5958,total:5958},{name:'Access Doors (12x12)',qty:12,unit:'EA',unitPrice:130,total:1560},{name:'Balancing Dampers',qty:16,unit:'EA',unitPrice:98,total:1568},{name:'Fire Dampers',qty:8,unit:'EA',unitPrice:210,total:1680},{name:'Duct Insulation',qty:800,unit:'LF',unitPrice:2.6,total:2080},{name:'Support Hangers & Straps',qty:1,unit:'LS',unitPrice:980,total:980}]},
           ]
         },
         {
@@ -1240,8 +1455,8 @@
           detail:'Round spiral duct, fittings',
           status:'covered',
           quotes:[
-            {id:'q1',vendor:'Precision Ductwork',price:8420,selected:true,items:48,details:'Spiral lockseam, galvanized',flags:[],scope:'Spiral duct and all fittings per plans',lead:'Fabricate to schedule',warranty:'Workmanship warranty'},
-            {id:'q2',vendor:'Gulf Coast Sheet Metal',price:7950,selected:false,items:42,details:'Spiral duct only',flags:[],scope:'Spiral duct, standard fittings only',lead:'Fabricate to schedule',warranty:'Workmanship warranty'},
+            {id:'q1',vendor:'Precision Ductwork',price:8420,selected:true,items:8,details:'Spiral lockseam, galvanized',flags:[],scope:'Spiral duct and all fittings per plans',lead:'Fabricate to schedule',warranty:'Workmanship warranty',lineItems:[{name:'6" Spiral Duct (16ga) - 180 LF',qty:180,unit:'LF',unitPrice:18,total:3240},{name:'8" Spiral Duct (16ga) - 240 LF',qty:240,unit:'LF',unitPrice:22,total:5280},{name:'Fittings & Elbows (6" & 8")',qty:48,unit:'EA',unitPrice:35,total:1680},{name:'Flexible Connections (6x24")',qty:24,unit:'EA',unitPrice:28,total:672},{name:'Duct Support Straps (1.5x16)',qty:1,unit:'LS',unitPrice:320,total:320},{name:'Spiral Duct Sealer (Duct Seal)',qty:1,unit:'LS',unitPrice:180,total:180},{name:'Vibration Isolators (Neoprene)',qty:8,unit:'EA',unitPrice:45,total:360},{name:'Assembly & Delivery (420 LF)',qty:1,unit:'LS',unitPrice:440,total:440}]},
+            {id:'q2',vendor:'Gulf Coast Sheet Metal',price:8520,selected:false,items:8,details:'Spiral lockseam, galvanized',flags:[],scope:'Spiral duct and all fittings per plans',lead:'Fabricate to schedule',warranty:'Workmanship warranty',lineItems:[{name:'6" Spiral Duct (16ga) - 180 LF',qty:180,unit:'LF',unitPrice:18.2,total:3276},{name:'8" Spiral Duct (16ga) - 240 LF',qty:240,unit:'LF',unitPrice:22.2,total:5328},{name:'Fittings & Elbows (6" & 8")',qty:48,unit:'EA',unitPrice:36,total:1728},{name:'Flexible Connections (6x24")',qty:24,unit:'EA',unitPrice:30,total:720},{name:'Duct Support Straps (1.5x16)',qty:1,unit:'LS',unitPrice:340,total:340},{name:'Spiral Duct Sealer (Duct Seal)',qty:1,unit:'LS',unitPrice:190,total:190},{name:'Vibration Isolators (Neoprene)',qty:8,unit:'EA',unitPrice:48,total:384},{name:'Assembly & Delivery (420 LF)',qty:1,unit:'LS',unitPrice:460,total:460}]},
           ]
         },
         {id:'piping',
@@ -1249,7 +1464,7 @@
           detail:'Chilled water and condensate piping',
           status:'covered',
           quotes:[
-            {id:'q1',vendor:'Apex Plumbing and Mechanical',price:32400,selected:true,items:1,details:'Complete piping package with insulation',flags:[],scope:'All HVAC piping including chilled water, condensate, and insulation',lead:'Material to job schedule',warranty:'1 year workmanship'},
+            {id:'q1',vendor:'Apex Plumbing and Mechanical',price:32400,selected:true,items:12,details:'Complete piping package with insulation',flags:[],scope:'All HVAC piping including chilled water, condensate, and insulation',lead:'Material to job schedule',warranty:'1 year workmanship',lineItems:[{name:'1.5" Chilled Water Supply Piping',qty:480,unit:'LF',unitPrice:22,total:10560},{name:'1.5" Chilled Water Return Piping',qty:480,unit:'LF',unitPrice:22,total:10560},{name:'Condensate Piping & Drains',qty:1,unit:'LS',unitPrice:4200,total:4200},{name:'Pipe Insulation (1" foam)',qty:960,unit:'LF',unitPrice:3.5,total:3360},{name:'Fittings & Unions',qty:1,unit:'LS',unitPrice:1800,total:1800},{name:'Testing & Documentation',qty:1,unit:'LS',unitPrice:1920,total:1920},{name:'Pressure Relief Valves',qty:4,unit:'EA',unitPrice:180,total:720},{name:'Ball Valves & Gate Valves',qty:8,unit:'EA',unitPrice:95,total:760},{name:'Expansion Tank (20 gal)',qty:1,unit:'EA',unitPrice:450,total:450},{name:'Pipe Hangers & Supports',qty:1,unit:'LS',unitPrice:680,total:680},{name:'Pressure Gauges & Thermometers',qty:4,unit:'EA',unitPrice:85,total:340},{name:'System Flushing & Chemicals',qty:1,unit:'LS',unitPrice:910,total:910}]},
           ]
         }
       ]
@@ -1763,6 +1978,134 @@
       );
     };
 
+    const CompareQuotesModal=({category,onClose,selectQuote})=>{
+      const[expandedQuotes,setExpandedQuotes]=useState(new Set());
+      const toggleExpanded=(quoteId)=>{
+        const newExpanded=new Set(expandedQuotes);
+        if(newExpanded.has(quoteId)){
+          newExpanded.delete(quoteId);
+        }else{
+          newExpanded.add(quoteId);
+        }
+        setExpandedQuotes(newExpanded);
+      };
+      return(
+      <div className="modal-overlay" onClick={onClose}>
+        <div className="modal modal-lg" onClick={e=>e.stopPropagation()} style={{maxWidth:'1100px'}}>
+          <div className="modal-header">
+            <div>
+              <h2 style={{fontSize:20,fontWeight:700,letterSpacing:'-0.3px'}}>Compare Quotes</h2>
+              <p className="text-sm text-muted">{category.name} ({category.quotes?.length} quotes)</p>
+            </div>
+            <button className="modal-close" onClick={onClose}>×</button>
+          </div>
+          <div className="modal-body" style={{paddingBottom:0}}>
+            {category.quotes&&category.quotes.length>0?(
+              <div className="comparison-container">
+                {category.quotes.map(quote=>{
+                  const isExpanded=expandedQuotes.has(quote.id);
+                  return(
+                  <div 
+                    key={quote.id} 
+                    className="comparison-quote-card"
+                    onClick={()=>{selectQuote(category.id,quote.id);onClose();}}
+                    style={{cursor:'pointer'}}
+                  >
+                    <div className="comparison-quote-header">
+                      <div className="comparison-vendor-name">{quote.vendor}</div>
+                      <div className="comparison-price">${quote.price.toLocaleString()}</div>
+                      <div className="comparison-details">
+                        <span>{quote.items} items</span>
+                        <span style={{color:'var(--text-muted)'}}>•</span>
+                        <span>{quote.lead}</span>
+                      </div>
+                    </div>
+                    
+                    <div className="comparison-body">
+                      {quote.flags&&quote.flags.length>0&&(
+                        <div className="comparison-flags">
+                          <div className="comparison-flag-title">⚠ Flags</div>
+                          {quote.flags.map((flag,i)=>(
+                            <div key={i} className="comparison-flag-item">
+                              <span style={{minWidth:'4px'}}>•</span>
+                              <span>{flag.text}</span>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+
+                      <div className="comparison-section">
+                        <div className="comparison-section-title">Details</div>
+                        <div className="comparison-item">
+                          <span className="comparison-item-label">Lead Time</span>
+                          <span className="comparison-item-value">{quote.lead}</span>
+                        </div>
+                        <div className="comparison-item">
+                          <span className="comparison-item-label">Warranty</span>
+                          <span className="comparison-item-value">{quote.warranty}</span>
+                        </div>
+                      </div>
+
+                      {quote.scope&&(
+                        <div className="comparison-section">
+                          <div className="comparison-section-title">Scope</div>
+                          <p style={{fontSize:11,color:'var(--text-secondary)',lineHeight:'1.5',margin:0}}>{quote.scope}</p>
+                        </div>
+                      )}
+
+                      {quote.lineItems&&quote.lineItems.length>0&&(
+                        <div className="comparison-section">
+                          <div className="comparison-section-title">Items ({quote.lineItems.length})</div>
+                          <div className="comparison-line-items">
+                            {(isExpanded?quote.lineItems:quote.lineItems.slice(0,5)).map((item,i)=>(
+                              <div key={i} className="comparison-line-item-row">
+                                <span className="comparison-line-item-name">{item.name}</span>
+                                <span className="comparison-line-item-qty">{item.qty} {item.unit}</span>
+                                <span className="comparison-line-item-price">${item.total.toLocaleString()}</span>
+                              </div>
+                            ))}
+                            {quote.lineItems.length>5&&(
+                              <div 
+                                onClick={(e)=>{e.stopPropagation();toggleExpanded(quote.id);}}
+                                style={{padding:'8px 0',color:'var(--accent-blue)',fontSize:'12px',textAlign:'center',borderTop:'1px solid rgba(45,58,82,0.3)',marginTop:'8px',paddingTop:'10px',cursor:'pointer',fontWeight:600}}
+                                onMouseEnter={(e)=>e.target.style.opacity='0.8'}
+                                onMouseLeave={(e)=>e.target.style.opacity='1'}
+                              >
+                                {isExpanded?'− Show less':'+'+( quote.lineItems.length-5)+' more items'}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="comparison-footer" onClick={(e)=>e.stopPropagation()}>
+                      <div className="comparison-total">
+                        <span>Total</span>
+                        <span className="comparison-total-price">${quote.price.toLocaleString()}</span>
+                      </div>
+                      <button 
+                        className="btn btn-success comparison-select-btn"
+                        onClick={(e)=>{e.stopPropagation();toggleExpanded(quote.id);}}
+                      >
+                        {isExpanded?'Collapse':'Show Details'}
+                      </button>
+                    </div>
+                  </div>
+                  );
+                })}
+              </div>
+            ):(
+              <div style={{textAlign:'center',padding:'60px 20px',color:'var(--text-muted)'}}>
+                <p style={{fontSize:14}}>No quotes available for comparison</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    );
+    };
+
     const QuoteDetailModal=({quote,onClose})=>(
       <div className="modal-overlay" onClick={onClose}>
         <div className="modal modal-lg" onClick={e=>e.stopPropagation()}>
@@ -1807,6 +2150,38 @@
               <p className="text-secondary">{quote.scope}</p>
             </div>
 
+            {quote.lineItems&&quote.lineItems.length>0&&(
+              <div className="detail-section">
+                <h3>Line Items</h3>
+                <div className="table-container">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Description</th>
+                        <th style={{textAlign:'right'}}>Qty</th>
+                        <th style={{textAlign:'right'}}>Unit Price</th>
+                        <th style={{textAlign:'right'}}>Total</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {quote.lineItems.map((item,i)=>(
+                        <tr key={i}>
+                          <td>{item.name}</td>
+                          <td style={{textAlign:'right'}}>{item.qty.toLocaleString()}</td>
+                          <td style={{textAlign:'right'}}>${item.unitPrice.toLocaleString()}</td>
+                          <td style={{textAlign:'right',fontWeight:'600',color:'var(--accent-green)'}}>${item.total.toLocaleString()}</td>
+                        </tr>
+                      ))}
+                      <tr style={{background:'var(--bg-secondary)',fontWeight:'700'}}>
+                        <td colSpan="3" style={{textAlign:'right'}}>TOTAL:</td>
+                        <td style={{textAlign:'right',color:'var(--accent-green)'}}>${quote.price.toLocaleString()}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
             <div className="detail-section">
               <h3>Details</h3>
               <p className="text-secondary">{quote.details}</p>
@@ -1826,6 +2201,7 @@
       const[ignoredGaps,setIgnoredGaps]=useState({});
       const[exportModal,setExportModal]=useState(false);
       const[detailModal,setDetailModal]=useState(null);
+      const[comparisonModal,setComparisonModal]=useState(null);
       const[toast,setToast]=useState(null);
       const[exportOptions,setExportOptions]=useState({
         summary:true,
@@ -2173,6 +2549,15 @@
             
             {isExpanded&&cat.quotes&&cat.quotes.length>0&&(
               <div className="quotes-list">
+                {cat.quotes.length>1&&(
+                  <button 
+                    className="btn btn-primary compare-quotes-btn"
+                    onClick={(e)=>{e.stopPropagation();setComparisonModal(cat)}}
+                    style={{marginBottom:16}}
+                  >
+                    <span>⚖️</span> Compare ({cat.quotes.length})
+                  </button>
+                )}
                 {cat.quotes.map(quote=>{
                   const isSelected=selectedQuoteId===quote.id;
                   const flagKey=`${cat.id}-${quote.id}`;
@@ -2296,6 +2681,8 @@
         </div>
         
         {detailModal&&<QuoteDetailModal quote={detailModal} onClose={()=>setDetailModal(null)}/>}
+        
+        {comparisonModal&&<CompareQuotesModal category={comparisonModal} onClose={()=>setComparisonModal(null)} selectQuote={selectQuote}/>}
         
         {exportModal&&(
           <div className="modal-overlay" onClick={()=>setExportModal(false)}>
